@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import Layout from "./components/layout/Layout";
+import RegisterPage from "./pages/RegisterPage";
 import axios from "axios";
 
 function App() {
@@ -23,7 +24,9 @@ function App() {
 
   return (
     <>
-      <Layout/> 
+      <Layout>
+        <RegisterPage/>
+      </Layout>
     </>
   );
 }
