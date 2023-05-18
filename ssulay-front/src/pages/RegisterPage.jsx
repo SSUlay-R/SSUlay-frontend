@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import { Link } from 'react-router-dom';
 import './RegisterPage.css';
 
 export default function RegisterPage(props) {
@@ -47,7 +48,8 @@ export default function RegisterPage(props) {
         setIsPwMatched(false);
     }
   }
-  const onChangeNationality=(selectedNationality)=>{
+  const onChangeNationality = (e) => {
+    const selectedNationality = e.currentTarget.value;
     setNationality(selectedNationality);
   }
   const onChangePhoneNumber=(e)=>{
@@ -68,8 +70,8 @@ export default function RegisterPage(props) {
     <>
       <div className="register-container">
         <h1 className="Register">Register</h1>
-        <span>If you have an account with us. Please 
-          <span>  log in</span>
+        <span>If you have an account with us. Please
+        <span>   </span><Link to="/login">log in</Link> 
         </span>
         <form className="form-container" onSubmit={handleSubmit}>
           <label>

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
+import {  BrowserRouter as Router ,Routes, Route } from 'react-router-dom';
 import "./App.css";
 import Layout from "./components/layout/Layout";
 import RegisterPage from "./pages/RegisterPage";
+import LoginPage from "./pages/LoginPage";
 import axios from "axios";
 
 function App() {
@@ -23,11 +25,15 @@ function App() {
   }, []);
 
   return (
-    <>
-      <Layout>
-        <RegisterPage/>
-      </Layout>
-    </>
+    <Layout>
+      <Router>
+        <Routes>
+          <Route path="/" element= {<RegisterPage/>}/>
+          <Route path="/login" element={<LoginPage/>} />
+        </Routes>
+      </Router>
+    </Layout>
+
   );
 }
 
