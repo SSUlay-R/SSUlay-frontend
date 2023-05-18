@@ -4,6 +4,7 @@ import "./App.css";
 import Layout from "./components/layout/Layout";
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
+import BuddyForm from "./components/BuddyForm";
 import axios from "axios";
 
 function App() {
@@ -28,8 +29,9 @@ function App() {
     <Router>
       <Layout>
           <Routes>
-            <Route path="/" element= {<RegisterPage/>}/>
+            <Route path="/" element= {<RegisterPage/>}/> 
             <Route path="/login" element={<LoginPage/>} />
+            <Route path="/buddyform" element={<BuddyForm/>}/>
           </Routes>
       </Layout>
     </Router>
