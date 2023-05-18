@@ -1,5 +1,5 @@
 import React,{useState} from 'react'
-
+import './BuddyForm.css';
 export default function BuddyForm(props) {
   const[answer_1, setAnswer_1]=useState('');
   const[answer_2, setAnswer_2]= useState('');
@@ -22,7 +22,7 @@ export default function BuddyForm(props) {
         <hr/>
         <div className="explain-box">
         While the purpose of the program is to help you with the adjustment to life in Korea, there are also a few responsibilities on your part. Soongsil stuents in the program are generously donating their time of making friends with exchange students, so please ensure that you are also making an effort to respond to their communications. You are also encouraged to spend time with your buddy as friend after you are matched! 
-These Korean students volunteer to help incoming exchange stuent with advice and assistance. They also plan some events throughout the semester. 
+<br/><br/>These Korean students volunteer to help incoming exchange stuent with advice and assistance. They also plan some events throughout the semester.
 Please answer the questions below so that you can be matched with a budy. The answers will be showed to Korean stuents who volunteer this program. Give us as much information as possible so that we can make the best match! 
 The deadline is {props.date}!
         </div>
@@ -55,7 +55,7 @@ The deadline is {props.date}!
             *Please visit this website again and make sure to select your preferred buddy after {props.date} for buddy matching.
           </div>
           <label>
-            <input type="checkbox"/>
+            <input className="checkbox" type="checkbox"/>
             Accept
           </label>
           <button className="submit-btn" type="submit">Submit</button>
