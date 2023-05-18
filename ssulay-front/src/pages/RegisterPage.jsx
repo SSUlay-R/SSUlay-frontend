@@ -69,9 +69,9 @@ export default function RegisterPage(props) {
   return (
     <>
       <div className="register-container">
-        <h1 className="Register">Register</h1>
+        <h1 className="page-title">Register</h1>
         <span>If you have an account with us. Please
-        <span>   </span><Link className="login-link" to="/login">log in</Link> 
+        <span>   </span><Link className="link" to="/login">log in</Link> 
         </span>
         <form className="form-container" onSubmit={handleSubmit}>
           <label>
