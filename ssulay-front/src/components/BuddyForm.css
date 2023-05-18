@@ -33,7 +33,9 @@
   background-color: #F8F8F8;
   border: 1px #E9E9E9;
   padding:12px;
+  outline-color: rgb(203, 203, 203);
 }
+
 .char-count{
   margin-left:96%;
 }
