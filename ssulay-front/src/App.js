@@ -25,14 +25,15 @@ function App() {
   }, []);
 
   return (
-    <Layout>
-      <Router>
-        <Routes>
-          <Route path="/" element= {<RegisterPage/>}/>
-          <Route path="/login" element={<LoginPage/>} />
-        </Routes>
-      </Router>
-    </Layout>
+    <Router>
+      <Layout>
+          <Routes>
+            <Route path="/" element= {<RegisterPage/>}/>
+            <Route path="/login" element={<LoginPage/>} />
+          </Routes>
+      </Layout>
+    </Router>
+
 
   );
 }

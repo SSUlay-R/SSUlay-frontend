@@ -68,3 +68,14 @@
   border:none;
   align-self:center;
 }
+
+.login-link {
+  cursor: pointer;
+  color: #02A6CB;
+  
+}
+
+.login-link:active {
+  color: #0056b3;
+  transform: scale(0.9);
+}
