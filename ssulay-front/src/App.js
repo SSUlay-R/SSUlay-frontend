@@ -4,7 +4,9 @@ import "./App.css";
 import Layout from "./components/layout/Layout";
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
+import BuddyForm from "./components/BuddyForm";
 import axios from "axios";
+import CompletePage from "./pages/CompletePage";
 
 function App() {
   const [connection, setConnection] = useState("");
@@ -28,8 +30,10 @@ function App() {
     <Router>
       <Layout>
           <Routes>
-            <Route path="/" element= {<RegisterPage/>}/>
+            <Route path="/" element= {<RegisterPage/>}/> 
             <Route path="/login" element={<LoginPage/>} />
+            <Route path="/buddyform" element={<BuddyForm/>}/>
+            <Route path="/buddyform/complete" element={<CompletePage/>}/>
           </Routes>
       </Layout>
     </Router>
