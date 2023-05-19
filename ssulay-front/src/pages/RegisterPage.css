@@ -6,7 +6,7 @@
   justify-content: center;
   align-items: center;
 }
-.Register{
+.page-title{
   margin-bottom:10px;
   font-weight:bold;
 }
@@ -67,4 +67,15 @@
   color: #FFFFFF;
   border:none;
   align-self:center;
+}
+
+.link {
+  cursor: pointer;
+  color: #02A6CB;
+  
+}
+
+.login-link:active {
+  color: #0056b3;
+  transform: scale(0.9);
 }
