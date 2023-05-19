@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
-import logo from "./logo.svg";
+import {  BrowserRouter as Router ,Routes, Route } from 'react-router-dom';
 import "./App.css";
+import Layout from "./components/layout/Layout";
+import RegisterPage from "./pages/RegisterPage";
+import LoginPage from "./pages/LoginPage";
 import axios from "axios";
 
 function App() {
@@ -22,12 +25,15 @@ function App() {
   }, []);
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>{connection}</p>
-      </header>
-    </div>
+    <Layout>
+      <Router>
+        <Routes>
+          <Route path="/" element= {<RegisterPage/>}/>
+          <Route path="/login" element={<LoginPage/>} />
+        </Routes>
+      </Router>
+    </Layout>
+
   );
 }
 
