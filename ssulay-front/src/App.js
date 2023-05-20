@@ -7,6 +7,8 @@ import LoginPage from "./pages/LoginPage";
 import BuddyForm from "./components/BuddyForm";
 import axios from "axios";
 import CompletePage from "./pages/CompletePage";
+import BuddySearch from "./components/BuddySearch";
+import TagBlock from "./components/TagBlock";
 
 function App() {
   const [connection, setConnection] = useState("");
@@ -34,6 +36,7 @@ function App() {
             <Route path="/login" element={<LoginPage/>} />
             <Route path="/buddyform" element={<BuddyForm/>}/>
             <Route path="/buddyform/complete" element={<CompletePage/>}/>
+            <Route path="/buddy/prefer" element={<BuddySearch/>}/>
           </Routes>
       </Layout>
     </Router>
