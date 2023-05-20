@@ -5,7 +5,7 @@ export default function ResultTag(props) {
   const ResultTagStyle={
     backgroundColor:"#F8F8F8",
     borderRadius:"22px",
-    minWidth:"100px",
+    minWidth:"140px",
     maxWidth: '250px',
     height:"31px",
     color:"black",

@@ -37,11 +37,8 @@ export default function BuddySearch() {
       setSelectedTags([...selectedTags, tag]);
     }
   }
-  const handleRemoveTag = (tag) => {
-    setSelectedTags(selectedTags.filter((selectedTag) => selectedTag !== tag));
-  };
-
   
+
   return (
     <>
       <div className="buddy-page-container">
@@ -79,7 +76,7 @@ export default function BuddySearch() {
           <hr/>
           <div className="selected-tags">
             {selectedTags.map((tag, index)=>(
-              <ResultTag key={index} onRemoveTag={handleRemoveTag}>{tag}</ResultTag>
+              <ResultTag key={index} onRemoveTag={handleSelectedTag}>{tag}</ResultTag>
             ))}
           </div> 
         </div>
