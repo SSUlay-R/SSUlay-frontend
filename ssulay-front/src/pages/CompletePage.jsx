@@ -1,7 +1,6 @@
 import React from 'react';
 import "./CompletePage.css";
 import { Link } from 'react-router-dom';
-import TagBlock from '../components/TagBlock';
 
 export default function CompletePage() {
   return (
@@ -12,7 +11,6 @@ export default function CompletePage() {
         </div>
         <Link to="/"><button className="submit-btn">Confirm
         </button></Link>
-        <TagBlock></TagBlock>
       </div>
       
     </>

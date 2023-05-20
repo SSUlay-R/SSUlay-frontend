@@ -1,5 +1,6 @@
 import React from 'react'
 import "./BuddySearch.css";
+import ResultTag from './ResultTag';
 
 export default function BuddySearch() {
   return (
@@ -12,8 +13,9 @@ export default function BuddySearch() {
         </div>
         <div className="tag-container"> 
           <div className="semi-title">
-            
           </div>
+          <ResultTag>faff</ResultTag>
+          
         </div>
       </div>
     </>

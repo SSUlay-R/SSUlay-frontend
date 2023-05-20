@@ -8,7 +8,6 @@ import BuddyForm from "./components/BuddyForm";
 import axios from "axios";
 import CompletePage from "./pages/CompletePage";
 import BuddySearch from "./components/BuddySearch";
-import TagBlock from "./components/TagBlock";
 
 function App() {
   const [connection, setConnection] = useState("");
