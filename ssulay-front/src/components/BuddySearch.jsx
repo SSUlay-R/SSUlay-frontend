@@ -1,8 +1,24 @@
 import React from 'react'
 import "./BuddySearch.css";
 import ResultTag from './ResultTag';
+import TagBlock from './TagBlock';
+
+
+
 
 export default function BuddySearch() {
+  const interests = [
+    "Sports",
+    "Music",
+    "Art",
+    "Reading",
+    "Cooking",
+    "Travel",
+    "Photography",
+    "Technology",
+    "Fashion",
+  ];
+
   return (
     <>
       <div className="buddy-page-container">
@@ -13,9 +29,13 @@ export default function BuddySearch() {
         </div>
         <div className="tag-container"> 
           <div className="semi-title">
+            Interests
           </div>
-          <ResultTag>faff</ResultTag>
-          
+          <div className="interest-tags">
+            {interests.map((interest, index)=> (
+              <TagBlock key={index}>{interest}</TagBlock>
+            ))}
+          </div>
         </div>
       </div>
     </>

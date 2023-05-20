@@ -6,19 +6,19 @@ export default function TagBlock(props) {
   const tagBlockStyle={
     backgroundColor:"#02A6CB",
     borderRadius:"22px",
-    minWidth: '100px',
+    minWidth: '70px',
     maxWidth: '250px',
     height:"31px",
     color:"white",
-    padding:"5px",
-    display: 'inline-block',
+    display: 'felx',
     justifyContent:'center',
     alignItems:'center',
     fontSize:'16px',    
-    fontWeight:"600",
+    fontWeight:"500",
     whiteSpace: 'nowrap',
     overflow: 'hidden',
-    border: isClicked ? 'none' : '4px solid #006E93',
+    border:'none',
+    outline: isClicked ? '4px solid #006E93':'none' ,
   }
   const handleClick=()=>{
     setIsClicked(!isClicked);
