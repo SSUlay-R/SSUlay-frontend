@@ -1,7 +1,6 @@
-import React,{useState} from 'react'
+import React from 'react'
 
 export default function ResultTag(props) {
-  const [isClicked, setIsClicked ] = useState(false);
 
   const ResultTagStyle={
     backgroundColor:"#F8F8F8",
@@ -32,15 +31,14 @@ export default function ResultTag(props) {
     width:"10px",
     height:"10px",
   }
-
-  const handleClick=()=>{
-    setIsClicked(!isClicked);
-  }
+  const handleRemoveTag = () => {
+    props.onRemoveTag(props.children);
+  };
 
   return (
-    <div style={ResultTagStyle} onClick={handleClick}>
+    <div style={ResultTagStyle}>
       {props.children}
-      <button style={xmark}><img style={xmarkImg} alt="cancle btn" src="/assets/xmark.png" /></button>
+      <button style={xmark} onClick={handleRemoveTag}><img style={xmarkImg} alt="cancle btn" src="/assets/xmark.png" /></button>
     </div>
   )
 }

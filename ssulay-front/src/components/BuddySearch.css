@@ -1,0 +1,24 @@
+.box-container{
+  background-color:#F8F8F8;
+  border-radius:10px;
+  height:70px;
+  padding:5px;
+  padding-left: 7px;
+}
+.tag-container{
+  margin-top:30px;
+}
+.tags{
+  display:flex;
+  gap:10px;
+  flex-wrap: wrap;
+}
+.semi-title{
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom:10px;
+}
+
+.search-result{
+  margin-top:50px;
+}
