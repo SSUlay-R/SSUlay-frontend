@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import { Link } from 'react-router-dom';
 import './RegisterPage.css';
 
+
 export default function RegisterPage(props) {
 
   const nationalityOptions=['Korea','USA','Japan','China','UK','Canada','Australia','Germany','France','Spain','Sweden','Netherlands','Finland']

@@ -1,8 +1,9 @@
-import React,{ useState} from 'react'
+import React,{useMemo, useState} from 'react'
 import "./BuddySearch.css";
 import ResultTag from './ResultTag';
 import TagBlock from './TagBlock';
-
+import Table from './Table';
+import faker from 'faker';
 
 
 
@@ -28,6 +29,34 @@ export default function BuddySearch() {
     "Meditation",
     "Cafe-hoppoing",
   ]
+  const columns= useMemo(
+    ()=>[
+      {
+        accessor:"userName",
+        Header:"User name",
+      },
+      {
+        accessor:"interests",
+        Header:"Interests",
+      },
+      {
+        accessor:"lifestyle",
+        Header:"Lifestyle",
+      }
+    ],[]
+  );
+ //테스트용 가짜데이터
+  const data=useMemo(
+    ()=>
+    Array(30)
+    .fill()
+    .map(()=> ({
+      userName: faker.name.firstName(),
+      interests:faker.lorem.words(10),
+      lifestyle: faker.lorem.words(10),
+    })),[]
+  );
+
   const [selectedTags,setSelectedTags]=useState([]);
   
   const handleSelectedTag= (tag)=>{
@@ -78,7 +107,14 @@ export default function BuddySearch() {
             {selectedTags.map((tag, index)=>(
               <ResultTag key={index} onRemoveTag={handleSelectedTag}>{tag}</ResultTag>
             ))}
+            <button className="search-btn">Search</button>
           </div> 
+          <div className="result-table-container">
+            <div className="result-counter"></div>
+            <div className="result-table">
+              <Table columns={columns} data={data}/>;
+            </div>
+          </div>
         </div>
       </div>
     </>

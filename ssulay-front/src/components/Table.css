@@ -1,0 +1,14 @@
+th,td{
+  padding:10px;
+}
+thead{
+  background-color: #F8F8F8;
+  font-weight:700;
+  font-size:20px;
+  color:#006E93;
+  border-bottom: 1px solid #006E93;
+
+}
+.row-tr{
+  border-bottom: 1px solid #CACACA;
+}
