@@ -42,23 +42,91 @@ export default function BuddySearch() {
       {
         accessor:"lifestyle",
         Header:"Lifestyle",
-      }
+      },
+      
     ],[]
   );
  //테스트용 가짜데이터
-  const data=useMemo(
-    ()=>
-    Array(30)
-    .fill()
-    .map(()=> ({
-      userName: faker.name.firstName(),
-      interests:faker.lorem.words(10),
-      lifestyle: faker.lorem.words(10),
-    })),[]
-  );
-
+  const data = useMemo(
+  () => [
+    {
+      userName: "John",
+      interests: "Sports, Music",
+      lifestyle: "Fitness",
+    },
+    {
+      userName: "Alice",
+      interests: "Art, Reading",
+      lifestyle: "Wellness",
+    },
+    {
+      userName: "Bob",
+      interests: "Cooking, Travel",
+      lifestyle: "Adventure",
+    },
+    {
+      userName: "Emma",
+      interests: "Technology, Fashion",
+      lifestyle: "Sustainability",
+    },
+    {
+      userName: "Michael",
+      interests: "Reading, Photography",
+      lifestyle: "Meditation",
+    },
+    {
+      userName: "Olivia",
+      interests: "Music, Art",
+      lifestyle: "Cafe-hopping",
+    },
+    {
+      userName: "William",
+      interests: "Sports, Travel",
+      lifestyle: "Healthy",
+    },
+    {
+      userName: "Sophia",
+      interests: "Fashion, Technology",
+      lifestyle: "YOLO",
+    },
+    {
+      userName: "James",
+      interests: "Cooking, Photography",
+      lifestyle: "Adventure",
+    },
+    {
+      userName: "Ava",
+      interests: "Reading, Art",
+      lifestyle: "Wellness",
+    },
+    {
+      userName: "Liam",
+      interests: "Sports, Music",
+      lifestyle: "Fitness",
+    },
+    {
+      userName: "Isabella",
+      interests: "Fashion, Travel",
+      lifestyle: "Sustainability",
+    },
+    {
+      userName: "Mason",
+      interests: "Technology, Photography",
+      lifestyle: "Meditation",
+    },
+    // Add more data rows as needed...
+  ],
+  []
+);
+  const [selectedBuddy, setSelectedBuddy] = useState([]);
   const [selectedTags,setSelectedTags]=useState([]);
-  
+
+  const handleSelectRow = (rowData) => {
+    // 이미 선택한 데이터인 경우 중복 추가되지 않도록 처리
+    if (!selectedBuddy.includes(rowData)) {
+      setSelectedBuddy([...selectedBuddy, rowData]);
+    }
+  };
   const handleSelectedTag= (tag)=>{
     if(selectedTags.includes(tag)){
       setSelectedTags(selectedTags.filter((selectedTag)=>selectedTag!==tag)); //이미 존재하면 해당 태그만 제외하고 다시 배열을 만듦
@@ -110,9 +178,15 @@ export default function BuddySearch() {
             <button className="search-btn">Search</button>
           </div> 
           <div className="result-table-container">
-            <div className="result-counter"></div>
+            <div className="result-counter">{data.length} results</div>
             <div className="result-table">
-              <Table columns={columns} data={data}/>;
+              <Table columns={columns} data={data} handleSelectRow={handleSelectRow}/>;
+            </div>
+          </div>
+          <div className="selected-container">
+            <div className="semi-title">Selected</div>
+            <div className="selected-table">
+              <Table columns={columns} data={selectedBuddy}/>;
             </div>
           </div>
         </div>

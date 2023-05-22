@@ -12,3 +12,6 @@ thead{
 .row-tr{
   border-bottom: 1px solid #CACACA;
 }
+.table-container{
+  width:100%;
+}
