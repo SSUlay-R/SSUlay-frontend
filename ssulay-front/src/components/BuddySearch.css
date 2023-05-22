@@ -46,7 +46,11 @@
   position:absolute;
   right:0;
 }
-
+.search-btn:active{
+  background-color: #00547b;
+  transform: translateY(2px);
+  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.3);
+}
 .select-btn{
   border:none;
   background-color: #006E93;
@@ -62,4 +66,19 @@
   background-color: #00547b;
   transform: translateY(2px);
   box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.3);
+}
+.selected-container{
+  margin-bottom: 300px;
+}
+#submit-btn{
+  margin-left:650px;
+}
+#submit-btn:active{
+  background-color: #00547b;
+  transform: translateY(2px);
+  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.3);
+}
+
+.error-message{
+  height:20px;
 }

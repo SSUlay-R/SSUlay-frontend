@@ -121,6 +121,8 @@ export default function BuddySearch() {
   const [selectedBuddy, setSelectedBuddy] = useState([]);
   const [selectedTags,setSelectedTags]=useState([]);
   const [rankedBuddy, setRankedBuddy]=useState([]);
+  const [showRankingError, setShowRankingError] = useState('');
+
   const handleSelectRow = (rowData) => {
     // 이미 선택한 데이터인 경우 중복 추가되지 않도록 처리
     if (!selectedBuddy.includes(rowData)) {
@@ -145,6 +147,21 @@ export default function BuddySearch() {
       setSelectedTags([...selectedTags, tag]);
     }
   }
+  const handleSubmit = () => {
+    const ranks = rankedBuddy.map(row => row.rank);
+    const hasDuplicateRanks = (new Set(ranks)).size !== ranks.length; // 랭킹 중복있나 확인
+    const hasAllRanks=(new Set(ranks).size !==3); //랭킹 모두 가지고 있는지 확인
+    if (hasDuplicateRanks) {
+      setShowRankingError('** Please assign unique rankings to the selected buddies.');
+    }
+    else if(hasAllRanks){
+      setShowRankingError('** Please assign rankings to the all buddies.');
+    } else {
+      // 정사일경우 제출할 로직 여기에 작성
+      setShowRankingError(false);
+      // ...
+    }
+  };
   
 
   return (
@@ -167,6 +184,7 @@ export default function BuddySearch() {
             ))}
           </div>
         </div>
+
         <div className="tag-container"> 
           <div className="semi-title">
             Lifestyle & Value
@@ -200,6 +218,11 @@ export default function BuddySearch() {
               <Table columns={columns} data={selectedBuddy} handleRankRow={handleRankRow}/>;
             </div>
           </div>
+          {showRankingError && (
+          <div className="error-message">{showRankingError}</div>
+        )}
+          <button className="submit-btn" onClick={handleSubmit} id="submit-btn">Submit</button>
+
         </div>
       </div>
     </>
