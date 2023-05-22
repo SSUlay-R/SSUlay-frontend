@@ -1,5 +1,6 @@
 import React,{useState} from 'react'
 import './BuddyForm.css';
+import { Link } from 'react-router-dom';
 export default function BuddyForm(props) {
   const[answer_1, setAnswer_1]=useState('');
   const[answer_2, setAnswer_2]= useState('');
@@ -58,7 +59,7 @@ The deadline is {props.date}!
             <input className="checkbox" type="checkbox"/>
             Accept
           </label>
-          <button className="submit-btn" type="submit">Submit</button>
+          <Link className="Link-btn-container" to="/buddyform/complete"><button className="submit-btn" type="submit">Submit</button></Link>
         </form>
       </div>
     </>

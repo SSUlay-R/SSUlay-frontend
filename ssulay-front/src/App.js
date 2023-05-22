@@ -1,30 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React  from "react";
 import {  BrowserRouter as Router ,Routes, Route } from 'react-router-dom';
 import "./App.css";
 import Layout from "./components/layout/Layout";
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
 import BuddyForm from "./components/BuddyForm";
-import axios from "axios";
 import CompletePage from "./pages/CompletePage";
+import BuddySearch from "./components/BuddySearch";
 
 function App() {
-  const [connection, setConnection] = useState("");
-
-  const connectionTest = () => {
-    axios
-      .get("http://localhost:4000/")
-      .then((response) => {
-        setConnection(response.data);
-      })
-      .catch((error) => {
-        setConnection(error.message);
-      });
-  };
-
-  useEffect(() => {
-    connectionTest();
-  }, []);
 
   return (
     <Router>
@@ -34,6 +18,7 @@ function App() {
             <Route path="/login" element={<LoginPage/>} />
             <Route path="/buddyform" element={<BuddyForm/>}/>
             <Route path="/buddyform/complete" element={<CompletePage/>}/>
+            <Route path="/buddy/prefer" element={<BuddySearch/>}/>
           </Routes>
       </Layout>
     </Router>
