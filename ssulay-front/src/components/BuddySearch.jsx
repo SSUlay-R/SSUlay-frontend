@@ -3,7 +3,6 @@ import "./BuddySearch.css";
 import ResultTag from './ResultTag';
 import TagBlock from './TagBlock';
 import Table from './Table';
-import faker from 'faker';
 
 
 
@@ -118,10 +117,10 @@ export default function BuddySearch() {
   ],
   []
 );
-  const [selectedBuddy, setSelectedBuddy] = useState([]);
-  const [selectedTags,setSelectedTags]=useState([]);
-  const [rankedBuddy, setRankedBuddy]=useState([]);
-  const [showRankingError, setShowRankingError] = useState('');
+  const [selectedBuddy, setSelectedBuddy] = useState([]);  //선호 버디목록에 선택된 버디들
+  const [selectedTags,setSelectedTags]=useState([]); //검색 필터링용 태그
+  const [rankedBuddy, setRankedBuddy]=useState([]); //랭킹 매겨진 버디들
+  const [showRankingError, setShowRankingError] = useState(''); //랭킹 유효성검사 관련 메시지
 
   const handleSelectRow = (rowData) => {
     // 이미 선택한 데이터인 경우 중복 추가되지 않도록 처리
