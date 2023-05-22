@@ -1,13 +1,14 @@
 import React,{useState} from 'react'
 import { Link } from 'react-router-dom';
 import './LoginPage.css';
+import { Auth } from '../config/firebase';
 
 export default function LoginPage() {
-  const[studentNumber, setStudentNumber]=useState('');
+  const[email, setEmail]=useState('');
   const[password,setPassword]=useState('');
 
-  const onChangeStdId=(e)=>{
-    setStudentNumber(e.currentTarget.value);
+  const onChangeEmail=(e)=>{
+    setEmail(e.currentTarget.value);
   } 
 
   const onChangePassword=(e)=>{
@@ -18,10 +19,10 @@ export default function LoginPage() {
     <>
       <div className="login-container">
         <h1 className="page-title">Login Account</h1>
-        <form className="login-form">
+        <form className="login-form"> 
           <label>
-            Student ID
-            <input className="login-input" type="text" value={studentNumber} onChange={onChangeStdId}/>
+            Email
+            <input className="login-input" type="text" value={email} onChange={onChangeEmail}/>
           </label>
           <label>
             Password
