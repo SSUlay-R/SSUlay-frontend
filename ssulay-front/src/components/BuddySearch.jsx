@@ -120,11 +120,22 @@ export default function BuddySearch() {
 );
   const [selectedBuddy, setSelectedBuddy] = useState([]);
   const [selectedTags,setSelectedTags]=useState([]);
-
+  const [rankedBuddy, setRankedBuddy]=useState([]);
   const handleSelectRow = (rowData) => {
     // 이미 선택한 데이터인 경우 중복 추가되지 않도록 처리
     if (!selectedBuddy.includes(rowData)) {
       setSelectedBuddy([...selectedBuddy, rowData]);
+    }
+  };
+  const handleRankRow = (rowData, rank) => {
+    if ( rank === 0 ) {
+      setRankedBuddy(rankedBuddy.filter((row) => row.userName !== rowData.userName));
+    } else {
+      const dataWithRank = { ...rowData, rank };
+      setRankedBuddy(prevRankedBuddy => {
+        const updatedBuddy = prevRankedBuddy.filter((row) => row.userName !== rowData.userName);
+        return [...updatedBuddy, dataWithRank];
+      });
     }
   };
   const handleSelectedTag= (tag)=>{
@@ -186,7 +197,7 @@ export default function BuddySearch() {
           <div className="selected-container">
             <div className="semi-title">Selected</div>
             <div className="selected-table">
-              <Table columns={columns} data={selectedBuddy}/>;
+              <Table columns={columns} data={selectedBuddy} handleRankRow={handleRankRow}/>;
             </div>
           </div>
         </div>
