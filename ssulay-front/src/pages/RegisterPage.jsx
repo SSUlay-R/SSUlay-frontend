@@ -1,7 +1,9 @@
 import React, {useState} from 'react';
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 import './RegisterPage.css';
-
+import {auth,db} from "../config/firebase"
+import {doc,setDoc} from "firebase/firestore";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
 export default function RegisterPage(props) {
 
@@ -12,7 +14,7 @@ export default function RegisterPage(props) {
   const[userName, setUserName]= useState('');
   const[nationality,setNationality]= useState('');
   const[email, setEmail]=useState('');
-  const[isVerified,setIsVerified]=useState(false);
+  // const[isVerified,setIsVerified]=useState(false);
   const[password,setPassword]=useState('');
   const[confirmPassword,setConfrimPassword]= useState('');
   const[isPwMatched,setIsPwMatched]=useState(true);
@@ -34,12 +36,12 @@ export default function RegisterPage(props) {
   const onChangeEmail=(e)=>{
     setEmail(e.currentTarget.value);
   }
-  const handleVerification = () => {
-    // 이메일 인증 로직 처리
+  // const handleVerification = () => {
+  //   // 이메일 인증 로직 처리
 
-    // 인증 완료 시 상태 변경
-    setIsVerified(true);
-  };
+  //   // 인증 완료 시 상태 변경 
+  //   setIsVerified(true);
+  // };
   const onChangePassword=(e)=>{
     setPassword(e.currentTarget.value);
   }
@@ -62,9 +64,34 @@ export default function RegisterPage(props) {
   const onChangeInsta=(e)=>{
     setInstagramId(e.currentTarget.value);
   }
-  const handleSubmit = (e)=>{
-    e.preventDefault();
-    //폼 제출 후 로직
+  const [err, setErr] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    setLoading(true);
+    e.preventDefault(); 
+    try {
+        //Create user
+        const res = await createUserWithEmailAndPassword(auth, email, password);
+        //create user on firestore
+        await setDoc(doc(db, "users", res.user.uid), {
+              uid: res.user.uid,
+              email: email,
+              studentNumber: studentNumber,
+              userName:userName,
+              nationality:nationality,
+              password:password,
+              phoneNumber: phoneNumber,
+              kakaoId: kakaoId,
+              instagramId: instagramId
+        });
+        navigate("/login");
+        } catch (err) {
+          console.log(err);
+          setErr(true);
+          setLoading(false);
+        }
   };
 
   return (
@@ -100,13 +127,6 @@ export default function RegisterPage(props) {
           <label className="label-container">
             Email:
             <input className="input-bar" type="email" value={email} onChange={onChangeEmail} />
-            <button
-              className={`verificationBtn ${isVerified ? 'verified' : ''}`}
-              onClick={handleVerification}
-              disabled={isVerified}
-            >
-              {isVerified ? '인증 완료' : '이메일 인증'}
-            </button>
           </label>
           <br />
           <label>
@@ -136,8 +156,10 @@ export default function RegisterPage(props) {
           </label>
           <br />
           <button className="submit-btn" type="submit">Sign up</button>
+          {err&&<span>Something went wrong</span>}
         </form>
       </div>
     </>
   );
 }
+
