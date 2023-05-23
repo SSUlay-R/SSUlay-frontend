@@ -13,7 +13,16 @@ export default function Header() {
       <div style={{ flex: 1, textAlign: 'center' , fontWeight: 'bold',fontSize: '30px', paddingRight:'167px'}}>Exchange at SSU-Fall 2023</div>
       
       {user ? (
-        <button onClick={()=>signOut(auth)}>logOut</button> 
+        <button onClick={()=>signOut(auth)}
+        style={{
+          padding: '5px 10px',
+          fontSize: '20px',
+          background: 'none',
+          border: 'none',
+          textDecoration: 'underline',
+          cursor: 'pointer',
+        }}
+        >Log out</button> 
       ):(
         <Link to="/login" style={{ position: 'absolute', top: '10px', right: '20px' ,padding: '5px 10px', fontSize: '20px', background: 'none', border: 'none', textDecoration: 'underline'}}>
         Log in</Link> 
