@@ -71,11 +71,11 @@ export default function RegisterPage(props) {
   const handleSubmit = async (e) => {
     setLoading(true);
     e.preventDefault(); 
-          try {
-              //Create user
-      const res = await createUserWithEmailAndPassword(auth, email, password);
-            //create user on firestore
-            await setDoc(doc(db, "users", res.user.uid), {
+    try {
+        //Create user
+        const res = await createUserWithEmailAndPassword(auth, email, password);
+        //create user on firestore
+        await setDoc(doc(db, "users", res.user.uid), {
               uid: res.user.uid,
               email: email,
               studentNumber: studentNumber,
@@ -85,12 +85,13 @@ export default function RegisterPage(props) {
               phoneNumber: phoneNumber,
               kakaoId: kakaoId,
               instagramId: instagramId
-            });
-          } catch (err) {
-            console.log(err);
-            setErr(true);
-            setLoading(false);
-          }
+        });
+        navigate("/login");
+        } catch (err) {
+          console.log(err);
+          setErr(true);
+          setLoading(false);
+        }
   };
 
   return (

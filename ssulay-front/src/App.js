@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
 import Layout from "./components/layout/Layout";
@@ -7,8 +7,12 @@ import LoginPage from "./pages/LoginPage";
 import BuddyForm from "./components/BuddyForm";
 import CompletePage from "./pages/CompletePage";
 import BuddySearch from "./components/BuddySearch";
+import { AuthContext } from "./context/AuthContext";
 
 function App() {
+  const { currentUser } = useContext(AuthContext);
+
+  console.log(currentUser);
   return (
     <Router>
       <Layout>
