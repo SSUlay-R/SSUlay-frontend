@@ -1,5 +1,10 @@
 import React, { useContext } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import "./App.css";
 import Layout from "./components/layout/Layout";
 import RegisterPage from "./pages/RegisterPage";
@@ -12,6 +17,14 @@ import { AuthContext } from "./context/AuthContext";
 
 function App() {
   const { currentUser } = useContext(AuthContext);
+
+  const ProtectedRoute = ({ children }) => {
+    console.log(currentUser);
+    if (!currentUser) {
+      return <Navigate to="/login" />;
+    }
+    return children;
+  };
 
   console.log(currentUser);
   return (

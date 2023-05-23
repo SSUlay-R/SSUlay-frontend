@@ -66,8 +66,8 @@ export default function RegisterPage(props) {
   const onChangeInsta=(e)=>{
     setInstagramId(e.currentTarget.value);
   }
-  const [err, setErr] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
