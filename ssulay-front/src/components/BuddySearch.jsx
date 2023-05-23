@@ -121,13 +121,14 @@ export default function BuddySearch() {
   const [selectedTags,setSelectedTags]=useState([]); //검색 필터링용 태그
   const [rankedBuddy, setRankedBuddy]=useState([]); //랭킹 매겨진 버디들
   const [showRankingError, setShowRankingError] = useState(''); //랭킹 유효성검사 관련 메시지
+  const [searchedBuddy, setSearchBuddy] = useState([]); //검색 결과 리스트
 
   const handleSelectRow = (rowData) => {
     // 이미 선택한 데이터인 경우 중복 추가되지 않도록 처리
     if (!selectedBuddy.includes(rowData)) {
       setSelectedBuddy([...selectedBuddy, rowData]);
     }
-  };
+  };  
   const handleRankRow = (rowData, rank) => {
     if ( rank === 0 ) {
       setRankedBuddy(rankedBuddy.filter((row) => row.userName !== rowData.userName));
@@ -146,6 +147,18 @@ export default function BuddySearch() {
       setSelectedTags([...selectedTags, tag]);
     }
   }
+
+  //검색 필터링 함수
+  const searchBuddy=()=>{
+    const filteredData= data.filter((row)=>{
+      return (
+        selectedTags.includes(row.interests) ||
+        selectedTags.includes(row.lifestyle)
+      );
+    });
+    setSearchBuddy(filteredData);
+  }
+
   const handleSubmit = () => {
     const ranks = rankedBuddy.map(row => row.rank);
     const hasDuplicateRanks = (new Set(ranks)).size !== ranks.length; // 랭킹 중복있나 확인
@@ -156,7 +169,7 @@ export default function BuddySearch() {
     else if(hasAllRanks){
       setShowRankingError('** Please assign rankings to the all buddies.');
     } else {
-      // 정사일경우 제출할 로직 여기에 작성
+      // 정상일경우 제출할 로직 여기에 작성
       setShowRankingError(false);
       // ...
     }
@@ -203,18 +216,18 @@ export default function BuddySearch() {
             {selectedTags.map((tag, index)=>(
               <ResultTag key={index} onRemoveTag={handleSelectedTag}>{tag}</ResultTag>
             ))}
-            <button className="search-btn">Search</button>
+            <button className="search-btn" onClick={searchBuddy}>Search</button>
           </div> 
           <div className="result-table-container">
-            <div className="result-counter">{data.length} results</div>
+            <div className="result-counter">{searchedBuddy.length} results</div>
             <div className="result-table">
-              <Table columns={columns} data={data} handleSelectRow={handleSelectRow}/>;
+              <Table columns={columns} data={searchedBuddy} handleSelectRow={handleSelectRow}/>
             </div>
           </div>
           <div className="selected-container">
             <div className="semi-title">Selected</div>
             <div className="selected-table">
-              <Table columns={columns} data={selectedBuddy} handleRankRow={handleRankRow}/>;
+              <Table columns={columns} data={selectedBuddy} handleRankRow={handleRankRow}/>
             </div>
           </div>
           {showRankingError && (
