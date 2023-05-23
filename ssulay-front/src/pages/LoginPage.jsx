@@ -28,7 +28,7 @@ export default function LoginPage() {
             Password
             <input className="login-input" type="password" value={password} onChange={onChangePassword} />
           </label>
-          <button id= "login-btn"className="submit-btn" type="submit">Log In</button>
+          <button id= "login-btn"className="submit-btn" type="submit">Login</button>
           <span>Forgot Password?</span>
           <span>Don't have an account? <Link to ="/" className="link">Register here!</Link></span>
         </form>

@@ -1,5 +1,10 @@
 import React, { useContext } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import "./App.css";
 import Layout from "./components/layout/Layout";
 import RegisterPage from "./pages/RegisterPage";
@@ -12,6 +17,14 @@ import { AuthContext } from "./context/AuthContext";
 function App() {
   const { currentUser } = useContext(AuthContext);
 
+  const ProtectedRoute = ({ children }) => {
+    console.log(currentUser);
+    if (!currentUser) {
+      return <Navigate to="/login" />;
+    }
+    return children;
+  };
+
   console.log(currentUser);
   return (
     <Router>
@@ -19,9 +32,30 @@ function App() {
         <Routes>
           <Route path="/" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/buddyform" element={<BuddyForm />} />
-          <Route path="/buddyform/complete" element={<CompletePage />} />
-          <Route path="/buddy/prefer" element={<BuddySearch />} />
+          <Route
+            path="/buddyform"
+            element={
+              <ProtectedRoute>
+                <BuddyForm />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/buddyform/complete"
+            element={
+              <ProtectedRoute>
+                <CompletePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/buddy/prefer"
+            element={
+              <ProtectedRoute>
+                <BuddySearch />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </Layout>
     </Router>
