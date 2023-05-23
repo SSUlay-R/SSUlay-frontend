@@ -148,14 +148,17 @@ export default function BuddySearch() {
     }
   }
 
-  //검색 필터링 함수
+  //검색 필터링 함수, 검색버튼 누를 때 실행
   const searchBuddy=()=>{
-    const filteredData= data.filter((row)=>{
-      return (
-        selectedTags.includes(row.interests) ||
-        selectedTags.includes(row.lifestyle)
-      );
-    });
+    let filteredData= data;
+    if(selectedTags.length>0){
+      filteredData= data.filter((row)=>{
+        return (
+          selectedTags.includes(row.interests) ||
+          selectedTags.includes(row.lifestyle)
+        );
+      });
+    }
     setSearchBuddy(filteredData);
   }
 
