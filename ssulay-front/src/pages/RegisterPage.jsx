@@ -28,7 +28,7 @@ export default function RegisterPage(props) {
     setStudentNumber(e.currentTarget.value);
   } //학번
   const onChangeNickName=(e)=>{
-    setUserNickName(e.currentTarget.value);
+    setUserNickName(e.currentTarget.value);    
   }
   const onChangeName=(e)=>{
     setUserName(e.currentTarget.value);
@@ -36,12 +36,6 @@ export default function RegisterPage(props) {
   const onChangeEmail=(e)=>{
     setEmail(e.currentTarget.value);
   }
-  // const handleVerification = () => {
-  //   // 이메일 인증 로직 처리
-
-  //   // 인증 완료 시 상태 변경 
-  //   setIsVerified(true);
-  // };
   const onChangePassword=(e)=>{
     setPassword(e.currentTarget.value);
   }
