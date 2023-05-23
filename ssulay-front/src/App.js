@@ -1,5 +1,5 @@
-import React  from "react";
-import {  BrowserRouter as Router ,Routes, Route } from 'react-router-dom';
+import React, { useContext } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
 import Layout from "./components/layout/Layout";
 import RegisterPage from "./pages/RegisterPage";
@@ -8,9 +8,12 @@ import BuddyForm from "./components/BuddyForm";
 import CompletePage from "./pages/CompletePage";
 import BuddySearch from "./components/BuddySearch";
 import BuddyMatchResult from "./components/BuddyMatchResult";
+import { AuthContext } from "./context/AuthContext";
 
 function App() {
+  const { currentUser } = useContext(AuthContext);
 
+  console.log(currentUser);
   return (
     <Router>
       <Layout>
@@ -24,8 +27,6 @@ function App() {
           </Routes>
       </Layout>
     </Router>
-
-
   );
 }
 
