@@ -1,7 +1,8 @@
 import React,{useState} from 'react'
-import { Link } from 'react-router-dom';
+import { useNavigate, Link } from "react-router-dom";
 import './LoginPage.css';
-import { Auth } from '../config/firebase';
+import { auth } from '../config/firebase';
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 export default function LoginPage() {
   const[email, setEmail]=useState('');
@@ -15,11 +16,25 @@ export default function LoginPage() {
     setPassword(e.currentTarget.value);
   }
 
+  const [err, setErr] = useState(false);
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault(); 
+    try {
+        await signInWithEmailAndPassword(auth, email, password);
+        navigate("/buddyForm");
+        } catch (err) {
+          console.log(err);
+          setErr(true);
+        }
+  };
+
   return (
     <>
       <div className="login-container">
         <h1 className="page-title">Login Account</h1>
-        <form className="login-form"> 
+        <form className="login-form" onSubmit={handleSubmit}> 
           <label>
             Email
             <input className="login-input" type="text" value={email} onChange={onChangeEmail}/>
@@ -28,8 +43,7 @@ export default function LoginPage() {
             Password
             <input className="login-input" type="password" value={password} onChange={onChangePassword} />
           </label>
-          <button id= "login-btn"className="submit-btn" type="submit">Log In</button>
-          <span>Forgot Password?</span>
+          <button id= "login-btn"className="submit-btn" type="submit">Login</button>
           <span>Don't have an account? <Link to ="/" className="link">Register here!</Link></span>
         </form>
       </div>
