@@ -1,10 +1,16 @@
-import React,{useState} from 'react'
+import React,{useState, useContext} from 'react'
 import './BuddyForm.css';
-import { Link } from 'react-router-dom';
+import {db} from "../config/firebase"
+import {doc,setDoc} from "firebase/firestore";
+import { Link, useNavigate } from 'react-router-dom';
+import { AuthContext } from "../context/AuthContext";
+
 export default function BuddyForm(props) {
   const[answer_1, setAnswer_1]=useState('');
   const[answer_2, setAnswer_2]= useState('');
   const[answer_3, setAnswer_3] = useState('');
+  const navigate = useNavigate();
+  const { currentUser } = useContext(AuthContext);
   const MAX_LENGTH = 4000;
   const onChangeAnswer_1 = (event) => {
     setAnswer_1(event.target.value);
@@ -15,7 +21,20 @@ export default function BuddyForm(props) {
   const onChangeAnswer_3 = (event) => {
     setAnswer_3(event.target.value);
   };
-
+const handleSubmit = async (e) => {
+    console.log(currentUser);
+    e.preventDefault(); 
+    try {
+        //create form on firestore
+        await setDoc(doc(db, "form", currentUser.uid), {
+              uid: currentUser.uid,
+              form: answer_1+answer_2+answer_3,
+        });
+        navigate("/buddyform/complete");
+        } catch (err) {
+          console.log(err);
+        }
+  };
   return (
     <>
       <div className="buddy-page-container">
@@ -27,7 +46,7 @@ export default function BuddyForm(props) {
 Please answer the questions below so that you can be matched with a budy. The answers will be showed to Korean stuents who volunteer this program. Give us as much information as possible so that we can make the best match! 
 The deadline is {props.date}!
         </div>
-        <form className="buddy-form">
+        <form className="buddy-form" onSubmit={handleSubmit}>
           <div className="question-container">
             <div className="buddy-form-question">
               1. What are three things(or more) you like to do in your free time? Describe things that recently you are interested in
@@ -59,7 +78,8 @@ The deadline is {props.date}!
             <input className="checkbox" type="checkbox"/>
             Accept
           </label>
-          <Link className="Link-btn-container" to="/buddyform/complete"><button className="submit-btn" type="submit">Submit</button></Link>
+          {/* <Link className="Link-btn-container" to="/buddyform/complete"><button className="submit-btn" type="submit">Submit</button></Link> */}
+          <button className="submit-btn" type="submit">Submit</button>
         </form>
       </div>
     </>
