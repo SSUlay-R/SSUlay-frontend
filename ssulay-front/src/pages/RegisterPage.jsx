@@ -40,8 +40,9 @@ export default function RegisterPage(props) {
     setPassword(e.currentTarget.value);
   }
   const onChangeConfirmPassword=(e)=>{
-    setConfrimPassword(e.currentTarget.value);
-    if (password!==confirmPassword){
+    const currentPW=e.currentTarget.value;
+    setConfrimPassword(currentPW);
+    if (password!==currentPW){
         setIsPwMatched(false);
     }else{
       setIsPwMatched(true);
