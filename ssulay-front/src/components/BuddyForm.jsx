@@ -2,7 +2,7 @@ import React,{useState, useContext} from 'react'
 import './BuddyForm.css';
 import {db} from "../config/firebase"
 import {doc,setDoc} from "firebase/firestore";
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { AuthContext } from "../context/AuthContext";
 
 export default function BuddyForm(props) {
@@ -78,7 +78,6 @@ The deadline is {props.date}!
             <input className="checkbox" type="checkbox"/>
             Accept
           </label>
-          {/* <Link className="Link-btn-container" to="/buddyform/complete"><button className="submit-btn" type="submit">Submit</button></Link> */}
           <button className="submit-btn" type="submit">Submit</button>
         </form>
       </div>
