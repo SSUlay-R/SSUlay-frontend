@@ -49,6 +49,8 @@ export default function RegisterPage(props) {
     setConfrimPassword(e.currentTarget.value);
     if (password!==confirmPassword){
         setIsPwMatched(false);
+    }else{
+      setIsPwMatched(true);
     }
   }
   const onChangeNationality = (e) => {
