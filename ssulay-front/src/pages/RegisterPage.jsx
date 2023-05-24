@@ -12,7 +12,7 @@ export default function RegisterPage(props) {
   const[studentNumber, setStudentNumber]=useState('');
   const[userNickname, setUserNickName]= useState('');
   const[userName, setUserName]= useState('');
-  const[nationality,setNationality]= useState('');
+  const[nationality,setNationality]= useState('Korea'); //한국 디폴트값으로 해둠
   const[email, setEmail]=useState('');
   // const[isVerified,setIsVerified]=useState(false);
   const[password,setPassword]=useState('');
@@ -22,6 +22,14 @@ export default function RegisterPage(props) {
   const[phoneNumber,setPhoneNumber]=useState('');
   const[kakaoId,setKakaoId]=useState('');
   const[instagramId,setInstagramId]= useState('');
+  const [buddyNum, setBuddyNum] = useState('1'); //매치될 버디 수 디폴트는 1
+
+  //사용자에게 받지않는 정보
+  const isSubmitedForm=false; //폼제출여부 확인
+  const isMatched=false; //버디와 매치여부
+  const interestTags=[]; //관심사 태그 모음
+  const lifestyleTags = []; //라이프스타일 태그 모음
+
 
   //이벤트핸들러
   const onChangeStdId=(e)=>{
@@ -52,6 +60,9 @@ export default function RegisterPage(props) {
     const selectedNationality = e.currentTarget.value;
     setNationality(selectedNationality);
   }
+  const onChangeBuddyNum=(e) =>{
+    setBuddyNum(e.currentTarget.value);
+  }
   const onChangePhoneNumber=(e)=>{
     setPhoneNumber(e.currentTarget.value);
   }
@@ -61,6 +72,7 @@ export default function RegisterPage(props) {
   const onChangeInsta=(e)=>{
     setInstagramId(e.currentTarget.value);
   }
+  
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState(false);
   const navigate = useNavigate();
@@ -81,7 +93,13 @@ export default function RegisterPage(props) {
               password:password,
               phoneNumber: phoneNumber,
               kakaoId: kakaoId,
-              instagramId: instagramId
+              instagramId: instagramId,
+              //여기는 사용자에게 안보이는 속성영역
+              isSubmitedForm: isSubmitedForm,
+              isMatched:isMatched,
+              buddyNum:buddyNum,
+              interestTags:interestTags,
+              lifestyleTags:lifestyleTags,
         });
         navigate("/login");
         } catch (err) {
@@ -121,6 +139,16 @@ export default function RegisterPage(props) {
             </select>
           </label>
           <br />
+          
+          <label>
+          매칭 버디 수 (한국인 신청자만 조정가능):
+            {nationality === 'Korea' ? (
+            <input className="input-bar" type="number" value={buddyNum} onChange={onChangeBuddyNum} />
+            ) : (
+            <input className="input-bar input-readonly" type="number" value={buddyNum} readOnly />
+            )}
+          </label>
+          <br />
           <label className="label-container">
             Email:
             <input className="input-bar" type="email" value={email} onChange={onChangeEmail} />
@@ -152,6 +180,7 @@ export default function RegisterPage(props) {
             <input className="input-bar" type="text" value={instagramId} onChange={onChangeInsta} />
           </label>
           <br />
+          
           <button className="submit-btn" type="submit">Sign up</button>
           {err&&<span>Something went wrong</span>}
         </form>
