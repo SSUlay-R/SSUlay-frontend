@@ -2,7 +2,7 @@ import React,{useState, useContext} from 'react'
 import './BuddyForm.css';
 import {db} from "../config/firebase"
 import {doc,setDoc} from "firebase/firestore";
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { AuthContext } from "../context/AuthContext";
 
 export default function BuddyForm(props) {
