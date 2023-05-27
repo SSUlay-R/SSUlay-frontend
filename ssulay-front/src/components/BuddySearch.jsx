@@ -133,18 +133,16 @@ export default function BuddySearch() {
     } else {
       // 정상일경우 제출할 로직 여기에 작성
       setShowRankingError(false);
-          // Create an object with the ranked buddies' IDs and their ranks
-    let rankedBuddyIds = {}; //랭킹순으로 정렬
-    rankedBuddy.forEach(buddy => {
-      rankedBuddyIds[buddy.uid] = buddy.rank;
-    });
-    // Update the current user's preferred buddies in Firestore
-    const userRef = doc(db, 'users', currentUser.uid); // replace "currentUser" with the current user's ID
-    await updateDoc(userRef, {
-      preferredBuddies: rankedBuddyIds
-    });
+      // Sort the ranked buddies by rank and map to an array of their ids
+      let rankedBuddyIds = rankedBuddy.sort((a, b) => a.rank - b.rank).map(buddy => buddy.uid);
+      // Update the current user's preferred buddies in Firestore
+      const userRef = doc(db, 'users', currentUser.uid); // replace "currentUser" with the current user's ID
+      await updateDoc(userRef, {
+        preferredBuddies: rankedBuddyIds
+      });
     }
   };
+  
   
 
   return (
