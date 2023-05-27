@@ -119,7 +119,7 @@ export default function BuddySearch() {
 );
   const [selectedBuddy, setSelectedBuddy] = useState([]);  //선호 버디목록에 선택된 버디들
   const [selectedTags,setSelectedTags]=useState([]); //검색 필터링용 태그
-  const [rankedBuddy, setRankedBuddy]=useState([]); //랭킹 매겨진 버디들
+  const [rankedBuddy, setRankedBuddy]=useState([]) //랭킹 매겨진 버디들
   const [showRankingError, setShowRankingError] = useState(''); //랭킹 유효성검사 관련 메시지
   const [searchedBuddy, setSearchBuddy] = useState([]); //검색 결과 리스트
 
