@@ -14,6 +14,8 @@ import CompletePage from "./pages/CompletePage";
 import BuddySearch from "./components/BuddySearch";
 import BuddyMatchResult from "./components/BuddyMatchResult";
 import { AuthContext } from "./context/AuthContext";
+import BuddyProgramPage from "./pages/BuddyProgramPage";
+import DummyDataPage from "./pages/DummyDataPage";
 
 function App() {
   const { currentUser } = useContext(AuthContext);
@@ -37,13 +39,30 @@ function App() {
             path="/buddyform"
             element={
               <ProtectedRoute>
-                <BuddyForm />
+                {" "}
+                <BuddyForm />{" "}
               </ProtectedRoute>
             }
           />
-          <Route path="/buddyform/complete" element={<CompletePage />} />
-          <Route path="/buddy/prefer" element={<BuddySearch />} />
+          <Route
+            path="/buddyform/complete"
+            element={
+              <ProtectedRoute>
+                <CompletePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/buddy/prefer"
+            element={
+              <ProtectedRoute>
+                <BuddySearch />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/buddy/matched" element={<BuddyMatchResult />} />
+          <Route path="/buddyprogram" element={<BuddyProgramPage />} />
+          <Route path="/dummy" element={<DummyDataPage />} />
         </Routes>
       </Layout>
     </Router>

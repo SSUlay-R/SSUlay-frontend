@@ -103,23 +103,29 @@ export default function BuddySearch() {
   }
 
   //검색 필터링 함수, 검색버튼 누를 때 실행
-  const searchBuddy=()=>{
-    let filteredData= data;
-    if(selectedTags.length>0){
-      filteredData= data.filter((row)=>{
+  const searchBuddy = () => {
+    console.log(currentUser)
+    let filteredData = data;
+    if (selectedTags.length > 0) {
+      filteredData = data.filter((row) => {
+        // Convert the comma-separated tag strings back into arrays of tags
+        const interestsArray = row.interests.split(", ");
+        const lifestyleArray = row.lifestyle.split(", ");
+  
+        // Check if any of the individual tags are included in the selected tags
         return (
-          selectedTags.includes(row.interests) ||
-          selectedTags.includes(row.lifestyle)
+          interestsArray.some(tag => selectedTags.includes(tag)) ||
+          lifestyleArray.some(tag => selectedTags.includes(tag))
         );
       });
     }
     setSearchBuddy(filteredData);
-  }
-
+  };
+  
   const handleSubmit = async() => {
     const ranks = rankedBuddy.map(row => row.rank);
     const hasDuplicateRanks = (new Set(ranks)).size !== ranks.length; // 랭킹 중복있나 확인
-    const hasAllRanks=(new Set(ranks).size !==2); //랭킹 모두 가지고 있는지 확인
+    const hasAllRanks=(new Set(ranks).size !==3); //랭킹 모두 가지고 있는지 확인
     if (hasDuplicateRanks) {
       setShowRankingError('** Please assign unique rankings to the selected buddies.');
     }
@@ -133,15 +139,11 @@ export default function BuddySearch() {
     rankedBuddy.forEach(buddy => {
       rankedBuddyIds[buddy.uid] = buddy.rank;
     });
-    console.log(rankedBuddyIds);
-    console.log(currentUser);
     // Update the current user's preferred buddies in Firestore
     const userRef = doc(db, 'users', currentUser.uid); // replace "currentUser" with the current user's ID
     await updateDoc(userRef, {
       preferredBuddies: rankedBuddyIds
     });
-      console.log(rankedBuddy);
-      // ...
     }
   };
   
