@@ -15,6 +15,7 @@ export default function BuddyProgramPage() {
   const [userData, setUserData] = useState(null);
   const authInstance = getAuth();
   const user = authInstance.currentUser;
+  //현재 로그인 중인 유저의 uid를 가지고 users firestore접근
   useEffect(() => {
     const fetchUserData = async () => {
       if (user) {
