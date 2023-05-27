@@ -237,7 +237,6 @@ export default function BuddySearch() {
           <div className="error-message">{showRankingError}</div>
         )}
           <button className="submit-btn" onClick={handleSubmit} id="submit-btn">Submit</button>
-
         </div>
       </div>
     </>
