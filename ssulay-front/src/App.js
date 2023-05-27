@@ -16,6 +16,8 @@ import BuddyMatchResult from "./components/BuddyMatchResult";
 import { AuthContext } from "./context/AuthContext";
 import BuddyProgramPage from "./pages/BuddyProgramPage";
 import AdminPage from "./pages/AdminPage";
+import DummyDataPage from "./pages/DummyDataPage";
+
 
 function App() {
   const { currentUser } = useContext(AuthContext);
@@ -41,6 +43,7 @@ function App() {
             <Route path="/buddy/matched" element={<BuddyMatchResult/>}/>
             <Route path="/buddyprogram" element={<BuddyProgramPage/>}/>
             <Route path="/admin" element={<AdminPage/>}/>
+            <Route path="/dummy" element={<DummyDataPage />} />
           </Routes>
       </Layout>
     </Router>

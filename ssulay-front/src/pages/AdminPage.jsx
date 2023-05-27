@@ -1,5 +1,7 @@
 import React, {useMemo, useEffect, useState} from 'react';
 import './AdminPage.css';
+import { collection, getDocs, } from "firebase/firestore";
+import { db } from '../config/firebase';
 import Table from '../components/Table';
 
 export default function AdminPage() {
@@ -29,17 +31,34 @@ export default function AdminPage() {
       
     ],[]
   );
+  useEffect(() => {
+    const fetchData = async () => {
+      const usersCollection = collection(db, 'users');
+      const userSnapshot = await getDocs(usersCollection);
+      const userList = userSnapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+          userName: data.userName,
+          uid: data.uid,
+        };
+      });
+      console.log(userList); // Add this line to log your users data
+    };
+
+    fetchData();
+  }, []);
 
   //여기에 matchedList data 불러와주세요
   
   //버튼 상태관리
-  const [searchPageOpenBtn,setSearchPageOpemBtn ]= useState(true);
-  const [matchingStartBtn, setMatchingStartBtn]= useState(false);
-  const [resultPageOpenBtn, setResultPageOpenBtn]= useState(false);
+  const [searchPageOpen,setSearchPageOpen ]= useState(true);
+  const [matchingStart, setMatchingStart]= useState(false);
+  const [resultPageOpen, setResultPageOpen]= useState(false);
   
   const handleSearchPageBtn=()=>{
     //유저들 isSubmittedForm 확인후  상태 메시지 보내기. 
     //버디검색페이지 오픈되어있음을 데베에 전달
+    
   }
   const handleMatchingStartBtn=()=>{
     //

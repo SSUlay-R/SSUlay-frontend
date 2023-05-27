@@ -1,12 +1,42 @@
-import React,{useMemo, useState} from 'react'
+import React, { useEffect, useMemo, useState, useContext } from 'react';
 import "./BuddySearch.css";
 import ResultTag from './ResultTag';
 import TagBlock from './TagBlock';
 import Table from './Table';
-
-
+import { collection, getDocs, doc, updateDoc } from "firebase/firestore";
+import { db } from '../config/firebase';
+import { AuthContext } from "../context/AuthContext";
 
 export default function BuddySearch() {
+  const [selectedBuddy, setSelectedBuddy] = useState([]);  //선호 버디목록에 선택된 버디들
+  const [selectedTags,setSelectedTags]=useState([]); //검색 필터링용 태그
+  const [rankedBuddy, setRankedBuddy]=useState([]); //랭킹 매겨진 버디들
+  const [showRankingError, setShowRankingError] = useState(''); //랭킹 유효성검사 관련 메시지
+  const [searchedBuddy, setSearchBuddy] = useState([]); //검색 결과 리스트
+  const [users, setUsers] = useState([]);// db users
+  const { currentUser } = useContext(AuthContext); //현재 로그인된 사람
+    //DB에서 users 가져오기
+    useEffect(() => {
+      const fetchData = async () => {
+        const usersCollection = collection(db, 'users');
+        const userSnapshot = await getDocs(usersCollection);
+        const userList = userSnapshot.docs.map(doc => {
+          const data = doc.data();
+          return {
+            userName: data.userName,
+            interests: data.interestTags.join(", "),
+            lifestyle: data.lifestyleTags.join(", "),
+            uid: data.uid,
+          };
+        });
+        setUsers(userList);
+        console.log(userList); // Add this line to log your users data
+      };
+  
+      fetchData();
+    }, []);
+  
+
   const interests = [
     "Sports",
     "Music",
@@ -45,84 +75,7 @@ export default function BuddySearch() {
       
     ],[]
   );
- //테스트용 가짜데이터
-  const data = useMemo(
-  () => [
-    {
-      userName: "John",
-      interests: "Sports, Music",
-      lifestyle: "Fitness",
-    },
-    {
-      userName: "Alice",
-      interests: "Art, Reading",
-      lifestyle: "Wellness",
-    },
-    {
-      userName: "Bob",
-      interests: "Cooking, Travel",
-      lifestyle: "Adventure",
-    },
-    {
-      userName: "Emma",
-      interests: "Technology, Fashion",
-      lifestyle: "Sustainability",
-    },
-    {
-      userName: "Michael",
-      interests: "Reading, Photography",
-      lifestyle: "Meditation",
-    },
-    {
-      userName: "Olivia",
-      interests: "Music, Art",
-      lifestyle: "Cafe-hopping",
-    },
-    {
-      userName: "William",
-      interests: "Sports, Travel",
-      lifestyle: "Healthy",
-    },
-    {
-      userName: "Sophia",
-      interests: "Fashion, Technology",
-      lifestyle: "YOLO",
-    },
-    {
-      userName: "James",
-      interests: "Cooking, Photography",
-      lifestyle: "Adventure",
-    },
-    {
-      userName: "Ava",
-      interests: "Reading, Art",
-      lifestyle: "Wellness",
-    },
-    {
-      userName: "Liam",
-      interests: "Sports, Music",
-      lifestyle: "Fitness",
-    },
-    {
-      userName: "Isabella",
-      interests: "Fashion, Travel",
-      lifestyle: "Sustainability",
-    },
-    {
-      userName: "Mason",
-      interests: "Technology, Photography",
-      lifestyle: "Meditation",
-    },
-    // Add more data rows as needed...
-  ],
-  []
-);
-  const [selectedBuddy, setSelectedBuddy] = useState([]);  //선호 버디목록에 선택된 버디들
-  const [selectedTags,setSelectedTags]=useState([]); //검색 필터링용 태그
-  const [rankedBuddy, setRankedBuddy]=useState([]) //랭킹 매겨진 버디들
-  const [showRankingError, setShowRankingError] = useState(''); //랭킹 유효성검사 관련 메시지
-  const [searchedBuddy, setSearchBuddy] = useState([]); //검색 결과 리스트
-
+  const data = useMemo(() => users, [users]);
   const handleSelectRow = (rowData) => {
     // 이미 선택한 데이터인 경우 중복 추가되지 않도록 처리
     if (!selectedBuddy.includes(rowData)) {
@@ -149,20 +102,26 @@ export default function BuddySearch() {
   }
 
   //검색 필터링 함수, 검색버튼 누를 때 실행
-  const searchBuddy=()=>{
-    let filteredData= data;
-    if(selectedTags.length>0){
-      filteredData= data.filter((row)=>{
+  const searchBuddy = () => {
+    console.log(currentUser)
+    let filteredData = data;
+    if (selectedTags.length > 0) {
+      filteredData = data.filter((row) => {
+        // Convert the comma-separated tag strings back into arrays of tags
+        const interestsArray = row.interests.split(", ");
+        const lifestyleArray = row.lifestyle.split(", ");
+  
+        // Check if any of the individual tags are included in the selected tags
         return (
-          selectedTags.includes(row.interests) ||
-          selectedTags.includes(row.lifestyle)
+          interestsArray.some(tag => selectedTags.includes(tag)) ||
+          lifestyleArray.some(tag => selectedTags.includes(tag))
         );
       });
     }
     setSearchBuddy(filteredData);
-  }
-
-  const handleSubmit = () => {
+  };
+  
+  const handleSubmit = async() => {
     const ranks = rankedBuddy.map(row => row.rank);
     const hasDuplicateRanks = (new Set(ranks)).size !== ranks.length; // 랭킹 중복있나 확인
     const hasAllRanks=(new Set(ranks).size !==3); //랭킹 모두 가지고 있는지 확인
@@ -174,7 +133,16 @@ export default function BuddySearch() {
     } else {
       // 정상일경우 제출할 로직 여기에 작성
       setShowRankingError(false);
-      // ...
+          // Create an object with the ranked buddies' IDs and their ranks
+    let rankedBuddyIds = {}; //랭킹순으로 정렬
+    rankedBuddy.forEach(buddy => {
+      rankedBuddyIds[buddy.uid] = buddy.rank;
+    });
+    // Update the current user's preferred buddies in Firestore
+    const userRef = doc(db, 'users', currentUser.uid); // replace "currentUser" with the current user's ID
+    await updateDoc(userRef, {
+      preferredBuddies: rankedBuddyIds
+    });
     }
   };
   
@@ -237,7 +205,6 @@ export default function BuddySearch() {
           <div className="error-message">{showRankingError}</div>
         )}
           <button className="submit-btn" onClick={handleSubmit} id="submit-btn">Submit</button>
-
         </div>
       </div>
     </>
