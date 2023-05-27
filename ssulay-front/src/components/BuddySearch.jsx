@@ -1,12 +1,40 @@
-import React,{useMemo, useState} from 'react'
+import React, { useEffect, useMemo, useState } from 'react';
 import "./BuddySearch.css";
 import ResultTag from './ResultTag';
 import TagBlock from './TagBlock';
 import Table from './Table';
-
+import { collection, getDocs } from "firebase/firestore";
+import { db } from '../config/firebase';
 
 
 export default function BuddySearch() {
+  const [selectedBuddy, setSelectedBuddy] = useState([]);  //선호 버디목록에 선택된 버디들
+  const [selectedTags,setSelectedTags]=useState([]); //검색 필터링용 태그
+  const [rankedBuddy, setRankedBuddy]=useState([]); //랭킹 매겨진 버디들
+  const [showRankingError, setShowRankingError] = useState(''); //랭킹 유효성검사 관련 메시지
+  const [searchedBuddy, setSearchBuddy] = useState([]); //검색 결과 리스트
+  const [users, setUsers] = useState([]);// db users
+    //DB에서 users 가져오기
+    useEffect(() => {
+      const fetchData = async () => {
+        const usersCollection = collection(db, 'users');
+        const userSnapshot = await getDocs(usersCollection);
+        const userList = userSnapshot.docs.map(doc => {
+          const data = doc.data();
+          return {
+            userName: data.userName,
+            interests: data.interestTags.join(", "),
+            lifestyle: data.lifestyleTags.join(", "),
+          };
+        });
+        setUsers(userList);
+        console.log(userList); // Add this line to log your users data
+      };
+  
+      fetchData();
+    }, []);
+  
+
   const interests = [
     "Sports",
     "Music",
@@ -45,83 +73,79 @@ export default function BuddySearch() {
       
     ],[]
   );
- //테스트용 가짜데이터
-  const data = useMemo(
-  () => [
-    {
-      userName: "John",
-      interests: "Sports, Music",
-      lifestyle: "Fitness",
-    },
-    {
-      userName: "Alice",
-      interests: "Art, Reading",
-      lifestyle: "Wellness",
-    },
-    {
-      userName: "Bob",
-      interests: "Cooking, Travel",
-      lifestyle: "Adventure",
-    },
-    {
-      userName: "Emma",
-      interests: "Technology, Fashion",
-      lifestyle: "Sustainability",
-    },
-    {
-      userName: "Michael",
-      interests: "Reading, Photography",
-      lifestyle: "Meditation",
-    },
-    {
-      userName: "Olivia",
-      interests: "Music, Art",
-      lifestyle: "Cafe-hopping",
-    },
-    {
-      userName: "William",
-      interests: "Sports, Travel",
-      lifestyle: "Healthy",
-    },
-    {
-      userName: "Sophia",
-      interests: "Fashion, Technology",
-      lifestyle: "YOLO",
-    },
-    {
-      userName: "James",
-      interests: "Cooking, Photography",
-      lifestyle: "Adventure",
-    },
-    {
-      userName: "Ava",
-      interests: "Reading, Art",
-      lifestyle: "Wellness",
-    },
-    {
-      userName: "Liam",
-      interests: "Sports, Music",
-      lifestyle: "Fitness",
-    },
-    {
-      userName: "Isabella",
-      interests: "Fashion, Travel",
-      lifestyle: "Sustainability",
-    },
-    {
-      userName: "Mason",
-      interests: "Technology, Photography",
-      lifestyle: "Meditation",
-    },
-    // Add more data rows as needed...
-  ],
-  []
-);
-  const [selectedBuddy, setSelectedBuddy] = useState([]);  //선호 버디목록에 선택된 버디들
-  const [selectedTags,setSelectedTags]=useState([]); //검색 필터링용 태그
-  const [rankedBuddy, setRankedBuddy]=useState([]); //랭킹 매겨진 버디들
-  const [showRankingError, setShowRankingError] = useState(''); //랭킹 유효성검사 관련 메시지
-  const [searchedBuddy, setSearchBuddy] = useState([]); //검색 결과 리스트
+  const data = useMemo(() => users, [users]);
+//  //테스트용 가짜데이터 dummy data
+//   const data = useMemo(
+//   () => [
+//     {
+//       userName: "John",
+//       interests: "Sports, Music",
+//       lifestyle: "Fitness",
+//     },
+//     {
+//       userName: "Alice",
+//       interests: "Art, Reading",
+//       lifestyle: "Wellness",
+//     },
+//     {
+//       userName: "Bob",
+//       interests: "Cooking, Travel",
+//       lifestyle: "Adventure",
+//     },
+//     {
+//       userName: "Emma",
+//       interests: "Technology, Fashion",
+//       lifestyle: "Sustainability",
+//     },
+//     {
+//       userName: "Michael",
+//       interests: "Reading, Photography",
+//       lifestyle: "Meditation",
+//     },
+//     {
+//       userName: "Olivia",
+//       interests: "Music, Art",
+//       lifestyle: "Cafe-hopping",
+//     },
+//     {
+//       userName: "William",
+//       interests: "Sports, Travel",
+//       lifestyle: "Healthy",
+//     },
+//     {
+//       userName: "Sophia",
+//       interests: "Fashion, Technology",
+//       lifestyle: "YOLO",
+//     },
+//     {
+//       userName: "James",
+//       interests: "Cooking, Photography",
+//       lifestyle: "Adventure",
+//     },
+//     {
+//       userName: "Ava",
+//       interests: "Reading, Art",
+//       lifestyle: "Wellness",
+//     },
+//     {
+//       userName: "Liam",
+//       interests: "Sports, Music",
+//       lifestyle: "Fitness",
+//     },
+//     {
+//       userName: "Isabella",
+//       interests: "Fashion, Travel",
+//       lifestyle: "Sustainability",
+//     },
+//     {
+//       userName: "Mason",
+//       interests: "Technology, Photography",
+//       lifestyle: "Meditation",
+//     },
+//     // Add more data rows as needed...
+//   ],
+//   []
+// );
 
   const handleSelectRow = (rowData) => {
     // 이미 선택한 데이터인 경우 중복 추가되지 않도록 처리

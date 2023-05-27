@@ -29,6 +29,7 @@ export default function RegisterPage(props) {
   const isMatched=false; //버디와 매치여부
   const interestTags=[]; //관심사 태그 모음
   const lifestyleTags = []; //라이프스타일 태그 모음
+  const preferedBuddy=[]; //선호버디 목록
 
 
   //이벤트핸들러
@@ -100,6 +101,7 @@ export default function RegisterPage(props) {
               buddyNum:buddyNum,
               interestTags:interestTags,
               lifestyleTags:lifestyleTags,
+              preferedBuddy:preferedBuddy,
         });
         navigate("/login");
         } catch (err) {
