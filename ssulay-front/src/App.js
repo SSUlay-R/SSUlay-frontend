@@ -62,6 +62,7 @@ function App() {
           />
           <Route path="/buddy/matched" element={<BuddyMatchResult />} />
           <Route path="/buddyprogram" element={<BuddyProgramPage />} />
+          <Route path="/dummy" element={<DummyDataPage />} />
         </Routes>
       </Layout>
     </Router>
