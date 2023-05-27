@@ -11,6 +11,7 @@ export default function BuddyForm(props) {
   const[answer_3, setAnswer_3] = useState('');
   const navigate = useNavigate();
   const { currentUser } = useContext(AuthContext);
+
   const MAX_LENGTH = 4000;
   const onChangeAnswer_1 = (event) => {
     setAnswer_1(event.target.value);
@@ -21,7 +22,8 @@ export default function BuddyForm(props) {
   const onChangeAnswer_3 = (event) => {
     setAnswer_3(event.target.value);
   };
-const handleSubmit = async (e) => {
+
+  const handleSubmit = async (e) => {
     console.log(currentUser);
     e.preventDefault(); 
     try {
@@ -35,6 +37,7 @@ const handleSubmit = async (e) => {
           console.log(err);
         }
   };
+
   return (
     <>
       <div className="buddy-page-container">
