@@ -76,7 +76,6 @@ export default function BuddySearch() {
     ],[]
   );
   const data = useMemo(() => users, [users]);
-
   const handleSelectRow = (rowData) => {
     // 이미 선택한 데이터인 경우 중복 추가되지 않도록 처리
     if (!selectedBuddy.includes(rowData)) {
