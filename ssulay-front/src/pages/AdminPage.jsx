@@ -1,4 +1,4 @@
-import React, {useMemo, useEffect, useState} from 'react';
+import React, {useMemo, useEffect, useState, useRef} from 'react';
 import './AdminPage.css';
 import { collection, getDocs, } from "firebase/firestore";
 import { db } from '../config/firebase';
@@ -50,40 +50,75 @@ export default function AdminPage() {
 
   //여기에 matchedList data 불러와주세요
   
-  //버튼 상태관리
-  const [searchPageOpen,setSearchPageOpen ]= useState(true);
-  const [matchingStart, setMatchingStart]= useState(false);
-  const [resultPageOpen, setResultPageOpen]= useState(false);
-  
-  const handleSearchPageBtn=()=>{
+  const [searchPageOpen, setSearchPageOpen] = useState(true);
+  const [matchingStart, setMatchingStart] = useState(false);
+  const [resultPageOpen, setResultPageOpen] = useState(false);
+
+  const searchPageBtnRef = useRef(null);
+  const matchingStartBtnRef = useRef(null);
+  const resultPageOpenBtnRef = useRef(null);
+
+  //버튼 순서대로 상태 열리도록
+  useEffect(() => {
+    if (searchPageBtnRef.current && matchingStartBtnRef.current && resultPageOpenBtnRef.current) {
+      if (searchPageOpen) {
+        searchPageBtnRef.current.disabled = true;
+        matchingStartBtnRef.current.disabled = false;
+        resultPageOpenBtnRef.current.disabled = false;
+      } else if (matchingStart) {
+        searchPageBtnRef.current.disabled = true;
+        matchingStartBtnRef.current.disabled = true;
+        resultPageOpenBtnRef.current.disabled = false;
+      } else if (resultPageOpen) {
+        searchPageBtnRef.current.disabled = false;
+        matchingStartBtnRef.current.disabled = false;
+        resultPageOpenBtnRef.current.disabled = true;
+      }
+    }
+  }, [searchPageOpen, matchingStart, resultPageOpen]);
+
+
+  const handleSearchPageBtn = () => {
+    setSearchPageOpen(true);
+    setMatchingStart(false);
+    setResultPageOpen(false);
     //유저들 isSubmittedForm 확인후  상태 메시지 보내기. 
     //버디검색페이지 오픈되어있음을 데베에 전달
-    
-  }
-  const handleMatchingStartBtn=()=>{
-    //
-  }
-  const handleResultPageOpenBtn=()=>{
+  };
 
-  }
+  const handleMatchingStartBtn = () => {
+    setSearchPageOpen(false);
+    setMatchingStart(true);
+    setResultPageOpen(false);
+  };
+
+  const handleResultPageOpenBtn = () => {
+    setSearchPageOpen(false);
+    setMatchingStart(false);
+    setResultPageOpen(true);
+  };
   return (
     <>
       <div className="admin-page-contianier">
         <h1 className="admin-page-title">매칭 관리</h1>
-        <hr/>
+        <hr />
         <div className="process-container">
-          <button className="process-btn" onClick={handleSearchPageBtn}>버디 검색 <br/> 페이지 오픈</button>
+          <button ref={searchPageBtnRef} className="process-btn" onClick={handleSearchPageBtn}>
+            버디 검색 <br /> 페이지 오픈
+          </button>
           <img className="arrow-img" alt="오른쪽 화살표" src="/assets/arrow.png"></img>
-          <button className="process-btn" onClick={handleMatchingStartBtn}>매칭 시작</button>
+          <button ref={matchingStartBtnRef} className="process-btn" onClick={handleMatchingStartBtn}>
+            매칭 시작
+          </button>
           <img className="arrow-img" alt="오른쪽 화살표" src="/assets/arrow.png"></img>
-          <button className="process-btn" onClick={handleResultPageOpenBtn}>매칭 확인<br/>페이지 오픈</button> {/* 학생들 매칭 결과페이지 접근 여부 */}
+          <button ref={resultPageOpenBtnRef} className="process-btn" onClick={handleResultPageOpenBtn}>
+            매칭 확인<br />페이지 오픈
+          </button>
         </div>
         <div className="matching-result-container">
           <h1 className="admin-page-title">매칭 결과</h1>
-          <hr/>
-          <div className="result-table-container">
-
-          </div>
+          <hr />
+          <div className="result-table-container"></div>
         </div>
       </div>
     </>

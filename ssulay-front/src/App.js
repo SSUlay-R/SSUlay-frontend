@@ -36,33 +36,13 @@ function App() {
         <Routes>
           <Route path="/" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route
-            path="/buddyform"
-            element={
-              <ProtectedRoute>
-                <BuddyForm />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/buddyform/complete"
-            element={
-              <ProtectedRoute>
-                <CompletePage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/buddy/prefer"
-            element={
-              <ProtectedRoute>
-                <BuddySearch />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/buddyform" element={<ProtectedRoute><BuddyForm /></ProtectedRoute>}/>
+          <Route path="/buddyform/complete" element={<ProtectedRoute><CompletePage /></ProtectedRoute>}/>
+          <Route path="/buddy/prefer" element={<ProtectedRoute><BuddySearch /></ProtectedRoute>}/>
           <Route path="/buddy/matched" element={<BuddyMatchResult />} />
           <Route path="/buddyprogram" element={<BuddyProgramPage />} />
           <Route path="/dummy" element={<DummyDataPage />} />
+          <Route path="/admin" element={<AdminPage/>}/>
         </Routes>
       </Layout>
     </Router>
