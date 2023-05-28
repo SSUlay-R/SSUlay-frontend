@@ -1,8 +1,74 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { collection, getDocs } from "firebase/firestore";
+import { db } from '../config/firebase';
 
 export default function GaleShapelyAlgorithm(props) {
     const [result, setResult] = useState([]);
+    const [koreanUsers, setKoreanUsers] = useState([]);
+    const [foreignUsers, setForeignUsers] = useState([]);
+    const [foreignUidToIndex, setForeignUidToIndex] = useState({});
+    const [foreignIndexToUid, setForeignIndexToUid] = useState({});
+    const [koreanUidToIndex, setKoreanUidToIndex] = useState({});
+    const [koreanIndexToUid, setKoreanIndexToUid] = useState({});
 
+    useEffect(() => {
+        const fetchData = async () => {
+            const usersCollection = collection(db, 'users');
+            const userSnapshot = await getDocs(usersCollection).catch(err => console.log(err));
+            const userList = userSnapshot.docs.map(doc => {
+                const data = doc.data();
+                return {
+                    userName: data.userName,
+                    uid: data.uid,
+                    nationality: data.nationality,
+                    preferedBuddy: data.preferedBuddy,
+                    buddyNum: data.buddyNum,
+                };
+            });
+
+            const koreanUsers = userList.filter((user) => user.nationality === 'Korea');
+            const foreignUsers = userList.filter((user) => user.nationality !== 'Korea');
+
+            const foreignUidToIndex = {};
+            const foreignIndexToUid = {};
+            const koreanUidToIndex = {};
+            const koreanIndexToUid = {};
+
+            foreignUsers.forEach((user, index) => {
+                foreignUidToIndex[user.uid] = index;
+                foreignIndexToUid[index] = user.uid;
+            });
+
+            koreanUsers.forEach((user, index) => {
+                koreanUidToIndex[user.uid] = index;
+                koreanIndexToUid[index] = user.uid;
+            });
+
+            foreignUsers.forEach(user => {
+                user.preferedBuddy = user.preferedBuddy.map(uid => koreanUidToIndex[uid]);
+            });
+
+            koreanUsers.forEach(user => {
+                user.preferedBuddy = user.preferedBuddy.map(uid => foreignUidToIndex[uid]);
+            });
+
+            setForeignIndexToUid(foreignIndexToUid);
+            setForeignUidToIndex(foreignUidToIndex);
+            setKoreanIndexToUid(koreanIndexToUid);
+            setKoreanUidToIndex(koreanUidToIndex);
+
+            setForeignUsers(foreignUsers);
+            setKoreanUsers(koreanUsers);
+
+            //console.log(foreignIndexToUid);
+            //console.log(koreanIndexToUid);
+
+            //console.log(foreignUsers);
+            //console.log(koreanUsers);
+        };
+        fetchData();
+    }, []);
+    
     function prefersNewPartner(domesticStudentPreferences, domesticStudent, newPartner, currentPartner) {
         for (let i = 0; i < domesticStudentPreferences[domesticStudent].length; i++) {
             if (domesticStudentPreferences[domesticStudent][i] === newPartner) {
@@ -78,35 +144,25 @@ export default function GaleShapelyAlgorithm(props) {
 
         let res = [];
         for (let i = 0; i < domesticStudentPreferences.length; i++) {
-            res.push(`Domestic Student ${i} is matched with International student: ${stableMatchingResult[i].join(' ')}`);
-        }
+            const matchedForeignStudentUids = stableMatchingResult[i].map(index => foreignIndexToUid[index]).join(', ');
+            res.push(`Domestic Student ${koreanIndexToUid[i]} is matched with International student(s): ${matchedForeignStudentUids}`);
+        }        
         return res;
     }
 
     function handleClick() {
-        let internationalStudentPrefernces = [
-            [0, 1, 2, 3],
-            [3, 0, 1, 2],
-            [2, 1, 3, 0],
-            [1, 2, 0, 3],
-            [2, 3, 1, 0],
-            [0, 3, 1, 2],
-            [1, 0, 3, 2],
-            [1, 3, 0, 2],
-            [3, 1, 0, 2],
-            [2, 3, 0, 1]
-        ];
+        // Get preferences from the user data
+        const internationalStudentPrefernces = foreignUsers.map(user => user.preferedBuddy);
+        const domesticStudentPreferences = koreanUsers.map(user => user.preferedBuddy);
+        console.log(internationalStudentPrefernces);
+        console.log(domesticStudentPreferences);
+        // Get quota from some data source
+        // I'll just put an arbitrary value here. You should replace it with actual quota data
+        const quota = koreanUsers.map(user => user.buddyNum);
+        // Calculate results
+        const res = stableMatching(internationalStudentPrefernces, domesticStudentPreferences, quota);
 
-        let domesticStudentPreferences = [
-            [5, 8, 3, 0],
-            [1, 4, 9, 3],
-            [7, 6, 4, 0],
-            [9, 1, 6, 4]
-        ];
-
-        let quota = [1, 2, 3, 4];
-
-        let res = stableMatching(internationalStudentPrefernces, domesticStudentPreferences, quota);
+        // Update the result
         setResult(res);
     }
 

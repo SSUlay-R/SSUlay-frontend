@@ -45,17 +45,7 @@ export default function DummyDataCreator() {
     "Sophia",
     "Mia",
     "Charlotte",
-    "Amelia",
-    "Harper",
-    "Evelyn",
-    "Abigail",
-    "Emily",
-    "Elizabeth",
-    "Mila",
-    "Ella",
-    "Avery",
-    "Sofia",
-    "Camila"
+    "Amelia"
   ];
 
   const getRandomSubarray = (arr, size) => {
@@ -79,7 +69,7 @@ export default function DummyDataCreator() {
       const dummyEmail = `dummy${i}@test.com`;
       const dummyPassword = `dummyPassword${i}`;
       const dummyStudentNumber = `1234567${i}`;
-      const dummyUserName = names[i];
+      const dummyUserName = names[i-1];
       const dummyNationality = nationality[Math.floor(Math.random() * nationality.length)];
       const dummyPhoneNumber = `123456789${i}`;
       const dummyKakaoId = `dummyKakaoId${i}`;
@@ -129,7 +119,7 @@ export default function DummyDataCreator() {
         const dummyPhoneNumber = `82123456789${i}`;
         const dummyKakaoId = `kdummyKakaoId${i}`;
         const dummyInstagramId = `kdummyInstagramId${i}`;
-        const dummyBuddyNum = "i";
+        const dummyBuddyNum = i+1;
         const dummyInterestTags = getRandomSubarray(interests, 3);
         const dummyLifestyleTags = getRandomSubarray(lifestyles, 3);
         const preferedBuddy = getRandomSubarray(names,i+1); 
