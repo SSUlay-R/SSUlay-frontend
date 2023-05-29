@@ -17,6 +17,7 @@ import { AuthContext } from './context/AuthContext';
 import BuddyProgramPage from './pages/BuddyProgramPage';
 import AdminPage from './pages/AdminPage';
 import DummyDataPage from './pages/DummyDataPage';
+import Test from './pages/Test';
 
 function App() {
   const { currentUser } = useContext(AuthContext);
@@ -43,6 +44,7 @@ function App() {
           <Route path="/buddyprogram" element={<BuddyProgramPage />} />
           <Route path="/dummy" element={<DummyDataPage />} />
           <Route path="/admin" element={<AdminPage/>}/>
+          <Route path="/test" elemnet={<Test/>}/>
         </Routes>
       </Layout>
     </Router>
