@@ -38,7 +38,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/buddyform" element={<ProtectedRoute><BuddyForm /></ProtectedRoute>}/>
           <Route path="/buddyform/complete" element={<ProtectedRoute><CompletePage /></ProtectedRoute>}/>
-          <Route path="/buddy/prefer" element={<ProtectedRoute><BuddySearch /></ProtectedRoute>}/>
+          <Route path="/buddy/prefer" element={<BuddySearch />}/>
           <Route path="/buddy/matched" element={<BuddyMatchResult />} />
           <Route path="/buddyprogram" element={<BuddyProgramPage />} />
           <Route path="/dummy" element={<DummyDataPage />} />

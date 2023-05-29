@@ -1,7 +1,5 @@
 import React, {useMemo,  useState} from 'react';
 import './AdminPage.css';
-import { collection, getDocs, } from "firebase/firestore";
-import { db } from '../config/firebase';
 import Table from '../components/Table';
 import Alert from 'react-bootstrap/Alert';
 
