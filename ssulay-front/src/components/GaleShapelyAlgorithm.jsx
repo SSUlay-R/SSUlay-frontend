@@ -184,8 +184,8 @@ export default function GaleShapelyAlgorithm(props) {
         // Get preferences from the user data
         const internationalStudentPrefernces = foreignUsers.map(user => user.preferedBuddy);
         const domesticStudentPreferences = koreanUsers.map(user => user.preferedBuddy);
-        console.log(internationalStudentPrefernces);
-        console.log(domesticStudentPreferences);
+        //console.log(internationalStudentPrefernces);
+        //console.log(domesticStudentPreferences);
         // Get quota from some data source
         // I'll just put an arbitrary value here. You should replace it with actual quota data
         const quota = koreanUsers.map(user => user.buddyNum);

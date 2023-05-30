@@ -1,7 +1,7 @@
 import React,{useState, useContext} from 'react'
 import './BuddyForm.css';
 import {db} from "../config/firebase"
-import {doc,setDoc} from "firebase/firestore";
+import {doc,setDoc,collection, getDocs, updateDoc } from "firebase/firestore";
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from "../context/AuthContext";
 
@@ -31,6 +31,10 @@ export default function BuddyForm(props) {
         await setDoc(doc(db, "form", currentUser.uid), {
               uid: currentUser.uid,
               form: answer_1+answer_2+answer_3,
+        });
+        const userRef = doc(db, 'users', currentUser.uid); // replace "currentUser" with the current user's ID
+        await updateDoc(userRef, {
+          isSubmitted: true,
         });
         navigate("/buddyform/complete");
         } catch (err) {

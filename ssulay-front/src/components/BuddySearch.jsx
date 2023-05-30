@@ -3,60 +3,72 @@ import "./BuddySearch.css";
 import ResultTag from './ResultTag';
 import TagBlock from './TagBlock';
 import Table from './Table';
-import { collection, getDocs, doc, updateDoc } from "firebase/firestore";
+import { collection, getDocs, doc, updateDoc,getDoc } from "firebase/firestore";
 import { db } from '../config/firebase';
 import { AuthContext } from "../context/AuthContext";
 
 export default function BuddySearch() {
   const [selectedBuddy, setSelectedBuddy] = useState([]);  //선호 버디목록에 선택된 버디들
-  const [selectedTags,setSelectedTags]=useState([]); //검색 필터링용 태그
-  const [rankedBuddy, setRankedBuddy]=useState([]); //랭킹 매겨진 버디들
+  const [selectedTags, setSelectedTags] = useState([]); //검색 필터링용 태그
+  const [rankedBuddy, setRankedBuddy] = useState([]); //랭킹 매겨진 버디들
   const [showRankingError, setShowRankingError] = useState(''); //랭킹 유효성검사 관련 메시지
   const [searchedBuddy, setSearchBuddy] = useState([]); //검색 결과 리스트
   const [users, setUsers] = useState([]);// db users
   const { currentUser } = useContext(AuthContext); //현재 로그인된 사람
-    //DB에서 users 가져오기
-    useEffect(() => {
-      const fetchData = async () => {
-        const usersCollection = collection(db, 'users');
-        const userSnapshot = await getDocs(usersCollection);
-        const userList = userSnapshot.docs.map(doc => {
-          const data = doc.data();
-          return {
-            userName: data.userName,
-            interests: data.interestTags.join(", "),
-            lifestyle: data.lifestyleTags.join(", "),
-            uid: data.uid,
-          };
+  //DB에서 users 가져오기
+  useEffect(() => {
+    const fetchData = async () => {
+      const usersCollection = collection(db, 'users');
+      const userSnapshot = await getDocs(usersCollection);
+      
+      let userList = [];
+      for (let doci of userSnapshot.docs) {
+        const data = doci.data();
+    
+        const interestTagsDocRef = await doc(db, 'interestTag', data.uid);
+        //console.log(interestTagsDocRef);
+        const interestTagsSnapshot = await getDoc(interestTagsDocRef);
+    
+        // Assuming that interests are stored as an array of strings
+        let interests = [];
+        if(interestTagsSnapshot.exists()) {
+          const interestTagsData = interestTagsSnapshot.data();
+          for (const [key, value] of Object.entries(interestTagsData)) {
+            if (value && value.length > 0) { // If the value array is not empty
+              interests.push(key);
+            }
+          }
+        }
+      
+        userList.push({
+          userName: data.userName,
+          interests: interests.join(", "),
+          lifestyle:"",//data.lifestyleTags.join(", "),
+          uid: data.uid,
         });
-        setUsers(userList);
-        console.log(userList); // Add this line to log your users data
-      };
+      }
+      
+      setUsers(userList);
+      //console.log(userList);
+    };
+    
   
-      fetchData();
-    }, []);
+    fetchData();
+  }, []);
+  
   
 
+
   const interests = [
-    "Food&Drink",
-    "Cooking",
-    "Reading",
-    "Traveling",
-    "Pets",
-    "Going out",
-    "Outdoors",
-    "Sports",
-    "Entertainment",
-    "Arts",
-    "Music",
-    "Fashion&Style",
+    "Fitness",
     "Creativity",
-    "Gaming",
+    "Food",
     "Technology",
-    "etc"
+    "Charity",
+    "Music",
+    "Entertainment",
   ];
-  const lifestyles=[
-    "Fitness", //Diet and Nutirition
+  const lifestyles = [
     "Environmentalism",
     "Minimalism",
     "Spirituality",
@@ -68,22 +80,22 @@ export default function BuddySearch() {
     "Personal Growth",
     "Cultural Identity"
   ]
-  const columns= useMemo(
-    ()=>[
+  const columns = useMemo(
+    () => [
       {
-        accessor:"userName",
-        Header:"User name",
+        accessor: "userName",
+        Header: "User name",
       },
       {
-        accessor:"interests",
-        Header:"Interests",
+        accessor: "interests",
+        Header: "Interests",
       },
       {
-        accessor:"lifestyle",
-        Header:"Lifestyle",
+        accessor: "lifestyle",
+        Header: "Lifestyle",
       },
-      
-    ],[]
+
+    ], []
   );
   const data = useMemo(() => users, [users]);
   const handleSelectRow = (rowData) => {
@@ -91,9 +103,9 @@ export default function BuddySearch() {
     if (!selectedBuddy.includes(rowData)) {
       setSelectedBuddy([...selectedBuddy, rowData]);
     }
-  };  
+  };
   const handleRankRow = (rowData, rank) => {
-    if ( rank === 0 ) {
+    if (rank === 0) {
       setRankedBuddy(rankedBuddy.filter((row) => row.userName !== rowData.userName));
     } else {
       const dataWithRank = { ...rowData, rank };
@@ -103,24 +115,24 @@ export default function BuddySearch() {
       });
     }
   };
-  const handleSelectedTag= (tag)=>{
-    if(selectedTags.includes(tag)){
-      setSelectedTags(selectedTags.filter((selectedTag)=>selectedTag!==tag)); //이미 존재하면 해당 태그만 제외하고 다시 배열을 만듦
-    } else{
+  const handleSelectedTag = (tag) => {
+    if (selectedTags.includes(tag)) {
+      setSelectedTags(selectedTags.filter((selectedTag) => selectedTag !== tag)); //이미 존재하면 해당 태그만 제외하고 다시 배열을 만듦
+    } else {
       setSelectedTags([...selectedTags, tag]);
     }
   }
 
   //검색 필터링 함수, 검색버튼 누를 때 실행
   const searchBuddy = () => {
-    console.log(currentUser)
+    //console.log(currentUser)
     let filteredData = data;
     if (selectedTags.length > 0) {
       filteredData = data.filter((row) => {
         // Convert the comma-separated tag strings back into arrays of tags
-        const interestsArray = row.interests.split(", ");
-        const lifestyleArray = row.lifestyle.split(", ");
-  
+      const interestsArray = row.interests ? row.interests.split(", ") : [];
+      const lifestyleArray = row.lifestyle ? row.lifestyle.split(", ") : [];
+        //console.log(interestsArray);
         // Check if any of the individual tags are included in the selected tags
         return (
           interestsArray.some(tag => selectedTags.includes(tag)) ||
@@ -130,15 +142,15 @@ export default function BuddySearch() {
     }
     setSearchBuddy(filteredData);
   };
-  
-  const handleSubmit = async() => {
+
+  const handleSubmit = async () => {
     const ranks = rankedBuddy.map(row => row.rank);
     const hasDuplicateRanks = (new Set(ranks)).size !== ranks.length; // 랭킹 중복있나 확인
-    const hasAllRanks=(new Set(ranks).size !==3); //랭킹 모두 가지고 있는지 확인
+    const hasAllRanks = (new Set(ranks).size !== 3); //랭킹 모두 가지고 있는지 확인
     if (hasDuplicateRanks) {
       setShowRankingError('** Please assign unique rankings to the selected buddies.');
     }
-    else if(hasAllRanks){
+    else if (hasAllRanks) {
       setShowRankingError('** Please assign rankings to the all buddies.');
     } else {
       // 정상일경우 제출할 로직 여기에 작성
@@ -152,66 +164,66 @@ export default function BuddySearch() {
       });
     }
   };
-  
-  
+
+
 
   return (
     <>
       <div className="buddy-page-container">
         <h1 className="buddy-page-title">Choose your preferred buddies</h1>
-        <hr/>
+        <hr />
         <div className="box-container">
-        The list below is Soongsil students who applied for the Buddy program. Please read the information about the students, select 3 students who you want to be matched as a buddy and submit. Please make sure that the matching will be done based on your preference
+          The list below is Soongsil students who applied for the Buddy program. Please read the information about the students, select 3 students who you want to be matched as a buddy and submit. Please make sure that the matching will be done based on your preference
         </div>
-        <div className="tag-container"> 
+        <div className="tag-container">
           <div className="semi-title">
             Interests
           </div>
           <div className="tags">
-            {interests.map((interest, index)=> (
+            {interests.map((interest, index) => (
               <TagBlock key={index}
-              isSelected={selectedTags.includes(interest)}
-              onClick={handleSelectedTag}>{interest}</TagBlock>
+                isSelected={selectedTags.includes(interest)}
+                onClick={handleSelectedTag}>{interest}</TagBlock>
             ))}
           </div>
         </div>
 
-        <div className="tag-container"> 
+        <div className="tag-container">
           <div className="semi-title">
             Lifestyle & Value
           </div>
           <div className="tags">
-            {lifestyles.map((lifestyle, index)=> (
-              <TagBlock key={index} 
-              isSelected={selectedTags.includes(lifestyle)}
-              onClick={handleSelectedTag}>{lifestyle}</TagBlock>
+            {lifestyles.map((lifestyle, index) => (
+              <TagBlock key={index}
+                isSelected={selectedTags.includes(lifestyle)}
+                onClick={handleSelectedTag}>{lifestyle}</TagBlock>
             ))}
           </div>
         </div>
         <div className="search-result">
           <div className="semi-title">Search result</div>
-          <hr/>
+          <hr />
           <div className="selected-tags">
-            {selectedTags.map((tag, index)=>(
+            {selectedTags.map((tag, index) => (
               <ResultTag key={index} onRemoveTag={handleSelectedTag}>{tag}</ResultTag>
             ))}
             <button className="search-btn" onClick={searchBuddy}>Search</button>
-          </div> 
+          </div>
           <div className="result-table-container">
             <div className="result-counter">{searchedBuddy.length} results</div>
             <div className="result-table">
-              <Table columns={columns} data={searchedBuddy} handleSelectRow={handleSelectRow}/>
+              <Table columns={columns} data={searchedBuddy} handleSelectRow={handleSelectRow} />
             </div>
           </div>
           <div className="selected-container">
             <div className="semi-title">Selected</div>
             <div className="selected-table">
-              <Table columns={columns} data={selectedBuddy} handleRankRow={handleRankRow}/>
+              <Table columns={columns} data={selectedBuddy} handleRankRow={handleRankRow} />
             </div>
           </div>
           {showRankingError && (
-          <div className="error-message">{showRankingError}</div>
-        )}
+            <div className="error-message">{showRankingError}</div>
+          )}
           <button className="submit-btn" onClick={handleSubmit} id="submit-btn">Submit</button>
         </div>
       </div>
