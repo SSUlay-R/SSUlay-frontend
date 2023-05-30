@@ -5,14 +5,24 @@ import { auth, db } from "../config/firebase";
 
 export default function DummyDataCreator() {
   const nationality = ['USA', 'Japan', 'China', 'UK', 'Canada', 'Australia', 'Germany', 'France', 'Spain', 'Sweden', 'Netherlands', 'Finland'];
+  
   const interests = [
-    "Out",
-    "Art",
-    "Food",
-    "Tech",
-    "Charity",
+    "Food&Drink",
+    "Cooking",
+    "Reading",
+    "Traveling",
+    "Pets",
+    "Going out",
+    "Outdoors",
+    "Sports",
+    "Entertainment",
+    "Arts",
     "Music",
-    "Ent",
+    "Fashion&Style",
+    "Creativity",
+    "Gaming",
+    "Technology",
+    "etc"
   ];
 
   const lifestyles = [
@@ -79,7 +89,7 @@ export default function DummyDataCreator() {
 
       try {
         // Create user
-        //const res = await createUserWithEmailAndPassword(auth, dummyEmail, dummyPassword);
+        const res = await createUserWithEmailAndPassword(auth, dummyEmail, dummyPassword);
         // Create user on firestore
         //await setDoc(doc(db, "users", res.user.uid), {
         await setDoc(doc(db, "users", dummyUserName), {
@@ -100,6 +110,16 @@ export default function DummyDataCreator() {
           lifestyleTags: dummyLifestyleTags,
           preferedBuddy: preferedBuddy,
         });
+              //interestTag 문서 생성
+      await setDoc(doc(db, "interestTag", dummyUserName),{
+        Fitness: [],
+        Creativity: [],
+        Food:[],
+        Tech:[],
+        Charity:[],
+        Music:[],
+        Ent:[],
+});
       } catch (err) {
         console.log(err);
       }

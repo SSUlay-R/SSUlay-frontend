@@ -27,8 +27,6 @@ export default function RegisterPage(props) {
   //사용자에게 받지않는 정보
   const isSubmitedForm=false; //폼제출여부 확인
   const isMatched=false; //버디와 매치여부
-  const interestTags=[]; //관심사 태그 모음
-  const lifestyleTags = []; //라이프스타일 태그 모음
   const preferedBuddy=[]; //선호버디 목록
 
 
@@ -74,12 +72,10 @@ export default function RegisterPage(props) {
     setInstagramId(e.currentTarget.value);
   }
   
-  const [loading, setLoading] = useState(false);
   const [err, setErr] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    setLoading(true);
     e.preventDefault(); 
     try {
         //Create user
@@ -99,15 +95,26 @@ export default function RegisterPage(props) {
               isSubmitedForm: isSubmitedForm,
               isMatched:isMatched,
               buddyNum:buddyNum,
-              interestTags:interestTags,
-              lifestyleTags:lifestyleTags,
               preferedBuddy:preferedBuddy,
         });
+      //interestTag 문서 생성
+      await setDoc(doc(db, "interestTag", res.user.uid),{
+              Fitness: [],
+              Creativity: [],
+              Food:[],
+              Tech:[],
+              Charity:[],
+              Music:[],
+              Ent:[],
+      });
+      //lifestyle생성 필요 
+      // await setDoc(doc(db, "lifestyleTag", res.user.uid ),{
+
+      // })
         navigate("/login");
         } catch (err) {
           console.log(err);
           setErr(true);
-          setLoading(false);
         }
   };
 
