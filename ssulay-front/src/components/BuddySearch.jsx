@@ -38,15 +38,13 @@ export default function BuddySearch() {
   
 
   const interests = [
-    "Sports",
-    "Music",
+    "Out",
     "Art",
-    "Reading",
-    "Cooking",
-    "Travel",
-    "Photography",
-    "Technology",
-    "Fashion",
+    "Food",
+    "Tech",
+    "Charity",
+    "Music",
+    "Ent",
   ];
   const lifestyles=[
     "Fitness",

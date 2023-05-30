@@ -6,15 +6,13 @@ import { auth, db } from "../config/firebase";
 export default function DummyDataCreator() {
   const nationality = ['USA', 'Japan', 'China', 'UK', 'Canada', 'Australia', 'Germany', 'France', 'Spain', 'Sweden', 'Netherlands', 'Finland'];
   const interests = [
-    "Sports",
-    "Music",
+    "Out",
     "Art",
-    "Reading",
-    "Cooking",
-    "Travel",
-    "Photography",
-    "Technology",
-    "Fashion",
+    "Food",
+    "Tech",
+    "Charity",
+    "Music",
+    "Ent",
   ];
 
   const lifestyles = [
