@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -17,7 +17,7 @@ import { AuthContext } from './context/AuthContext';
 import BuddyProgramPage from './pages/BuddyProgramPage';
 import AdminPage from './pages/AdminPage';
 import DummyDataPage from './pages/DummyDataPage';
-import Test from './pages/Test';
+import GaleShapelyAlgorithm from "./components/GaleShapelyAlgorithm";
 
 function App() {
   const { currentUser } = useContext(AuthContext);
@@ -38,13 +38,14 @@ function App() {
           <Route path="/" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/buddyform" element={<ProtectedRoute><BuddyForm /></ProtectedRoute>}/>
-          <Route path="/buddyform/complete" element={<ProtectedRoute><CompletePage /></ProtectedRoute>}/>
+          <Route path="/buddyform/complete" element={<CompletePage />}/>
           <Route path="/buddy/prefer" element={<BuddySearch />}/>
           <Route path="/buddy/matched" element={<BuddyMatchResult />} />
           <Route path="/buddyprogram" element={<BuddyProgramPage />} />
           <Route path="/dummy" element={<DummyDataPage />} />
           <Route path="/admin" element={<AdminPage/>}/>
-          <Route path="/test" elemnet={<Test/>}/>
+          <Route path="/gsa" element={<GaleShapelyAlgorithm />} />
+
         </Routes>
       </Layout>
     </Router>
