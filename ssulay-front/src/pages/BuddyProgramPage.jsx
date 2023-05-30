@@ -10,8 +10,6 @@ import BuddySearch from "../components/BuddySearch";
 export default function BuddyProgramPage() {
   //isSubmitedForm :false -> 버디 매칭 폼작성 컴포넌트
   //isSubmitedForm: true-> 버디 매칭 검색 컴포넌트
-  //isMatched: false-> 아직 매칭이 되지 않았음을 보여주는 페이지
-  //isMatched: true -> 매칭 결과 페이지 
   const [userData, setUserData] = useState(null);
   const authInstance = getAuth();
   const user = authInstance.currentUser;

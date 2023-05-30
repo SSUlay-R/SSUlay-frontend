@@ -38,25 +38,36 @@ export default function BuddySearch() {
   
 
   const interests = [
-    "Sports",
-    "Music",
-    "Art",
-    "Reading",
+    
+    "Food&Drink",
     "Cooking",
-    "Travel",
-    "Photography",
+    "Reading",
+    "Traveling",
+    "Pets",
+    "Going out",
+    "Outdoors",
+    "Sports",
+    "Entertainment",
+    "Arts",
+    "Music",
+    "Fashion&Style",
+    "Creativity",
+    "Gaming",
     "Technology",
-    "Fashion",
+    "etc"
   ];
   const lifestyles=[
-    "Fitness",
-    "Healthy",
-    "Adventure",
-    "Wellness",
-    "YOLO",
-    "Sustainability",
-    "Meditation",
-    "Cafe-hoppoing",
+    "Fitness", //Diet and Nutirition
+    "Environmentalism",
+    "Minimalism",
+    "Spirituality",
+    "Philanthropy",
+    "Social Activism",
+    "Political Views",
+    "Entrepreneurship",
+    "Career Goals",
+    "Personal Growth",
+    "Cultural Identity"
   ]
   const columns= useMemo(
     ()=>[
