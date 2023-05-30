@@ -1,5 +1,5 @@
 import React from 'react';
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc ,collection, getDocs, updateDoc,getDoc } from "firebase/firestore";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../config/firebase";
 
@@ -286,11 +286,11 @@ export default function DummyDataCreator() {
       const preferedBuddy = getRandomSubarray(KoreanNames,4); 
       try {
         // Create user
-        //const res = await createUserWithEmailAndPassword(auth, dummyEmail, dummyPassword);
+        const res = await createUserWithEmailAndPassword(auth, dummyEmail, dummyPassword);
         // Create user on firestore
-        //await setDoc(doc(db, "users", res.user.uid), {
-        await setDoc(doc(db, "users", dummyUserName), {
-          uid: dummyUserName,
+        await setDoc(doc(db, "users", res.user.uid), {
+        //await setDoc(doc(db, "users", dummyUserName), {
+          uid: res.user.uid,
           email: dummyEmail,
           studentNumber: dummyStudentNumber,
           userName: dummyUserName,
@@ -303,10 +303,10 @@ export default function DummyDataCreator() {
           isSubmitedForm: false,
           isMatched: false,
           buddyNum: dummyBuddyNum,
-          preferedBuddy: preferedBuddy,
+          preferedBuddy: [],
         });
               //interestTag 문서 생성
-      await setDoc(doc(db, "interestTag", dummyUserName),{
+      await setDoc(doc(db, "interestTag", res.user.uid),{
         Fitness: [],
         Creativity: [],
         Food:[],
@@ -333,15 +333,15 @@ export default function DummyDataCreator() {
         const dummyKakaoId = `kdummyKakaoId${i}`;
         const dummyInstagramId = `kdummyInstagramId${i}`;
         const dummyBuddyNum = i+1;
-        const preferedBuddy = getRandomSubarray(names,i+1); 
+        //const preferedBuddy = getRandomSubarray(names,i+1); //여기 고쳐야함
   
         try {
           // Create user
-          //const res = await createUserWithEmailAndPassword(auth, dummyEmail, dummyPassword);
+          const res = await createUserWithEmailAndPassword(auth, dummyEmail, dummyPassword);
           // Create user on firestore
-          //await setDoc(doc(db, "users", res.user.uid), {
-          await setDoc(doc(db, "users", dummyUserName), {
-            uid: dummyUserName,
+          await setDoc(doc(db, "users", res.user.uid), {
+          //await setDoc(doc(db, "users", dummyUserName), {
+            uid: res.user.uid,
             email: dummyEmail,
             studentNumber: dummyStudentNumber,
             userName: dummyUserName,
@@ -354,9 +354,9 @@ export default function DummyDataCreator() {
             isSubmitedForm: false,
             isMatched: false,
             buddyNum: dummyBuddyNum,
-            preferedBuddy: preferedBuddy,
+            preferedBuddy: [],
           });
-          await setDoc(doc(db, "interestTag", dummyUserName),{
+          await setDoc(doc(db, "interestTag", res.user.uid),{
             Fitness: [],
             Creativity: [],
             Food:[],
@@ -371,10 +371,56 @@ export default function DummyDataCreator() {
       }
       alert("Korean Dummy data created");
     };
+
+    const createPreferedBuddy = async () => {
+      const usersSnapshot = await getDocs(collection(db, 'users'));
+      const uidList = [];
+      const foreignUidList = [];
+      const koreanUidList = [];
+    
+      usersSnapshot.forEach((doc) => {
+        uidList.push(doc.id);
+        const user = doc.data();
+        if (user.nationality === 'Korea') {
+          koreanUidList.push(doc.id);
+        } else {
+          foreignUidList.push(doc.id);
+        }
+      });
+    
+      // Handle Korean users - prefer buddies from foreignUidList
+      for(let i = 0; i < koreanUidList.length; i++){
+        const userRef = doc(db, 'users', koreanUidList[i]);
+        const userSnapshot = await getDoc(userRef);
+        const user = userSnapshot.data();
+    
+        const preferedBuddy = getRandomSubarray(foreignUidList, user.buddyNum);
+    
+        // Update the user's document with the preferred buddy list
+        await updateDoc(userRef, {
+          preferedBuddy: preferedBuddy
+        });
+      }
+    
+      // Handle foreign users - prefer buddies from koreanUidList
+      for(let i = 0; i < foreignUidList.length; i++){
+        const userRef = doc(db, 'users', foreignUidList[i]);
+        const preferedBuddy = getRandomSubarray(koreanUidList, 4);
+    
+        // Update the user's document with the preferred buddy list
+        await updateDoc(userRef, {
+          preferedBuddy: preferedBuddy
+        });
+      }
+    
+      alert("Preferred buddies created for each user");
+    };
+    
   return (
     <div>
       <button onClick={createForeignDummyData}>Create Foreign Dummy Data</button>
       <button onClick={createKoreanDummyData}>Create Korean Dummy Data</button>
+      <button onClick={createPreferedBuddy}>Create Prefered Buddy</button>
     </div>
     
   );
