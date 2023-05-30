@@ -38,7 +38,6 @@ export default function BuddySearch() {
   
 
   const interests = [
-    
     "Food&Drink",
     "Cooking",
     "Reading",

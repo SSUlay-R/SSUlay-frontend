@@ -5,18 +5,226 @@ import { auth, db } from "../config/firebase";
 
 export default function DummyDataCreator() {
   const nationality = ['USA', 'Japan', 'China', 'UK', 'Canada', 'Australia', 'Germany', 'France', 'Spain', 'Sweden', 'Netherlands', 'Finland'];
-  const interests = [
+  
+  const fitness = [
+    "Fitness",
     "Sports",
-    "Music",
-    "Art",
-    "Reading",
-    "Cooking",
+    "Basketball",
+    "Soccer",
+    "Football",
+    "Baseball",
+    "Volleyball",
+    "Tennis",
+    "Golf",
+    "Martial Arts",
+    "Swimming",
+    "Track and Field",
+    "Gymnastics",
+    "Surfing",
+    "Paddleboarding",
+    "Kayaking",
+    "Rafting",
+    "Scuba Diving",
+    "Snorkeling",
+    "Skiing",
+    "Snowboarding",
+    "Ice Skating",
+    "CrossFit",
+    "Barre",
+    "Zumba",
+    "Yoga/Pilates",
+    "Running/Jogging",
+    "Cycling",
+    "Rock Climbing",
+    "Mountaineering",
+    "Surfing",
+    "Hiking",
+    "Backpacking",
+    "Camping",
+    "Fishing",
+    "Hunting",
+    "Gardening",
+    "Social Activities",
     "Travel",
-    "Photography",
-    "Technology",
-    "Fashion",
+    "Backpacking",
+    "International Travel",
+    "Road Trips",
+    "Food Tourism",
+    "Place",
+    "Gyeongbokgung Palace",
+    "Namsan Tower",
+    "Han-gang",
+    "Han River",
+    "Bukchon Hanok Village",
+    "Gangnam District",
+    "Jeju",
+    "Gyeongju",
+    "Busan",
+    "Cheonggyecheon Stream",
+    "Hongdae",
+    "Cultural Immersion",
+    "Homestays",
+    "Language Immersion Programs",
+    "Cooking Classes",
+    "Art Classes"
   ];
 
+  const creativity = [
+    "Creativity",
+    "Arts",
+    "Painting",
+    "Drawing",
+    "Sculpture",
+    "Pottery",
+    "Graphic Design",
+    "Design",
+    "Fashion Design",
+    "Makeup Artistry",
+    "Fine Arts",
+    "Three-dimensional Arts",
+    "Tattoo Artistry",
+    "Tattoo",
+    "Literature",
+    "Creative Writing",
+    "Novel Writing",
+    "Poetry Writing",
+    "Journalism",
+    "Screenwriting",
+    "Memoir Writing",
+    "Blogging",
+    "Photography",
+    "Landscape",
+    "Portrait",
+    "Wildlife",
+    "Street",
+    "Nature",
+    "Fashion",
+    "DIY",
+    "Sewing"
+  ];
+
+  const food = [
+  "Food",
+  "Cooking",
+  "Baking",
+  "Grilling",
+  "Cuisine",
+  "Food Blogging",
+  "Food Vlogging",
+  "Kimchi",
+  "Bulgogi",
+  "Bibimbap",
+  "Ramen",
+  "Beer",
+  "Wine",
+  "Soju"
+  ];
+
+  const tech = [
+    "Tech",
+    "Programming",
+    "Web Development",
+    "App Development",
+    "Game Development",
+    "Software Engineering",
+    "Gaming",
+    "Video Games",
+    "Board Games",
+    "Card Games",
+    "Electronics",
+    "Tinkering with Gadgets",
+    "Building Robots",
+    "Digital Art",
+    "Graphic Design",
+    "Animation",
+    "Video Editing"
+  ];
+  
+  const charity = [
+    "Charity",
+    "Environmental Conservation Efforts",
+    "Tree Planting",
+    "Beach Cleanups",
+    "Recycling Programs",
+    "Animal Conservation",
+    "Political Activism",
+    "Lobbying",
+    "Protesting",
+    "Campaigning",
+    "Phone Banking",
+    "Disaster Relief Efforts",
+    "Emergency Response",
+    "Recovery Efforts",
+    "Supply Distribution",
+    "Medical Assistance",
+    "Elderly Care",
+    "Assisted Living Volunteering",
+    "Home Health Care Volunteering",
+    "Nursing Home",
+    "Health and Wellness",
+    "Volunteering at Hospitals",
+    "Senior Centers",
+    "Community Centers",
+    "Animal Welfare",
+    "Volunteering at Shelters",
+    "Rescuing Animals"
+  ];
+  
+  const music = [
+    "Music",
+    "Musical Instrument",
+    "Guitar",
+    "Piano",
+    "Drums",
+    "Violin",
+    "Flute",
+    "Cello",
+    "Trombone",
+    "Saxophone",
+    "Trumpet",
+    "Oboe",
+    "Harmonica",
+    "Bass Guitar",
+    "Clarinet",
+    "Pop",
+    "Hip-Hop",
+    "Classical",
+    "Jazz",
+    "Blues",
+    "Country",
+    "Folk",
+    "Electronic",
+    "Indie",
+    "EDM",
+    "Singer",
+    "Orchestra",
+    "Symphony",
+    "Choir",
+    "Songwriting",
+    "Concerts",
+    "Karaoke",
+    "Singing",
+    "Listening to Music",
+    "Playing an Instrument",
+    "Music Composition",
+    "DJing"
+  ];
+
+  const entertainment = [
+    "Entertainment",
+    "Drama",
+    "Movie",
+    "Watching Movies",
+    "Classic Films",
+    "Indie Films",
+    "Documentaries",
+    "Documentary",
+    "Theater",
+    "Musicals",
+    "Stand-up Comedy",
+    "Comedy"
+  ];
+    
   const lifestyles = [
     "Fitness",
     "Healthy",
@@ -75,10 +283,7 @@ export default function DummyDataCreator() {
       const dummyKakaoId = `dummyKakaoId${i}`;
       const dummyInstagramId = `dummyInstagramId${i}`;
       const dummyBuddyNum = "1";
-      const dummyInterestTags = getRandomSubarray(interests, 3);
-      const dummyLifestyleTags = getRandomSubarray(lifestyles, 3);
       const preferedBuddy = getRandomSubarray(KoreanNames,4); 
-
       try {
         // Create user
         //const res = await createUserWithEmailAndPassword(auth, dummyEmail, dummyPassword);
@@ -98,10 +303,18 @@ export default function DummyDataCreator() {
           isSubmitedForm: false,
           isMatched: false,
           buddyNum: dummyBuddyNum,
-          interestTags: dummyInterestTags,
-          lifestyleTags: dummyLifestyleTags,
           preferedBuddy: preferedBuddy,
         });
+              //interestTag 문서 생성
+      await setDoc(doc(db, "interestTag", dummyUserName),{
+        Fitness: [],
+        Creativity: [],
+        Food:[],
+        Tech:[],
+        Charity:[],
+        Music:[],
+        Ent:[],
+      });
       } catch (err) {
         console.log(err);
       }
@@ -120,8 +333,6 @@ export default function DummyDataCreator() {
         const dummyKakaoId = `kdummyKakaoId${i}`;
         const dummyInstagramId = `kdummyInstagramId${i}`;
         const dummyBuddyNum = i+1;
-        const dummyInterestTags = getRandomSubarray(interests, 3);
-        const dummyLifestyleTags = getRandomSubarray(lifestyles, 3);
         const preferedBuddy = getRandomSubarray(names,i+1); 
   
         try {
@@ -143,15 +354,22 @@ export default function DummyDataCreator() {
             isSubmitedForm: false,
             isMatched: false,
             buddyNum: dummyBuddyNum,
-            interestTags: dummyInterestTags,
-            lifestyleTags: dummyLifestyleTags,
             preferedBuddy: preferedBuddy,
+          });
+          await setDoc(doc(db, "interestTag", dummyUserName),{
+            Fitness: [],
+            Creativity: [],
+            Food:[],
+            Tech:[],
+            Charity:[],
+            Music:[],
+            Ent:[],
           });
         } catch (err) {
           console.log(err);
         }
       }
-      alert("Dummy data created");
+      alert("Korean Dummy data created");
     };
   return (
     <div>
