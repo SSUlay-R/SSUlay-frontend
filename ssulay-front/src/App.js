@@ -17,7 +17,7 @@ import { AuthContext } from './context/AuthContext';
 import BuddyProgramPage from './pages/BuddyProgramPage';
 import AdminPage from './pages/AdminPage';
 import DummyDataPage from './pages/DummyDataPage';
-import GaleShapelyAlgorithm from "./Function/GaleShapelyAlgorithm";
+import GaleShapelyAlgorithm from "./pages/GaleShapelyAlgorithm";
 
 function App() {
   const { currentUser } = useContext(AuthContext);
