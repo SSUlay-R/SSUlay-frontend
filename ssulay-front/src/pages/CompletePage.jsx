@@ -1,33 +1,21 @@
-import React,{useEffect} from 'react';
+import React,{useEffect, useState} from 'react';
 import "./CompletePage.css";
 import { Link } from 'react-router-dom';
-import { collection, getDocs,query, where, collectionGroup } from 'firebase/firestore';
-import { db } from '../config/firebase';
-
+import axios from 'axios';
 
 export default function CompletePage() {
+  const[similarity, setsimilarity] =useState(null);
+  const keyword1= 'apple';
+  const keyword2= 'orange';
 
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const usersCollection = collection(db, 'fakeUser','test');
-  //     const docRef= collection(db,"interestTags");
-  //     const interestTags = query(usersCollection, where('interestTag','==',docRef));
-  //     const userSnapshot = await getDocs(usersCollection);
-  //     const userList = userSnapshot.docs.map((doc) => {
-  //       const data = doc.data();
-  //       return {
-  //         test:data.test,
-  //         interestTag: interestTags,
-  //       };
-  //     });
-
-  //     console.log(userList);
-  //   };
-
-  //   fetchData();
-  // }, []);
-
+  useEffect(()=>{
+    axios.get('/similarity',{
+      params:{ keyword1 : keyword1,
+        keyword2: keyword2}
+    })
+    .then(response=>setsimilarity(response.data.similarity))
+    .catch(error=>console.error(error));
+  })
   return (
     <>
       <div className="container">
@@ -36,6 +24,11 @@ export default function CompletePage() {
         </div>
         <Link to="/"><button className="submit-btn">Confirm
         </button></Link>
+        {similarity !==null ? (
+          <p> Similarity: {similarity}</p>
+        ):(
+          <p>Loading</p>
+        )}
       </div>
       
     </>

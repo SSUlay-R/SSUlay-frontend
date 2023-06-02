@@ -17,7 +17,7 @@ import { AuthContext } from './context/AuthContext';
 import BuddyProgramPage from './pages/BuddyProgramPage';
 import AdminPage from './pages/AdminPage';
 import DummyDataPage from './pages/DummyDataPage';
-import GaleShapelyAlgorithm from "./components/GaleShapelyAlgorithm";
+import GaleShapelyAlgorithm from "./Function/GaleShapelyAlgorithm";
 
 function App() {
   const { currentUser } = useContext(AuthContext);
@@ -45,7 +45,6 @@ function App() {
           <Route path="/dummy" element={<DummyDataPage />} />
           <Route path="/admin" element={<AdminPage/>}/>
           <Route path="/gsa" element={<GaleShapelyAlgorithm />} />
-
         </Routes>
       </Layout>
     </Router>
