@@ -1,7 +1,6 @@
 import React, {useEffect, useState}from 'react'
 import { collection, getDocs, doc, setDoc } from "firebase/firestore";
 import { db } from '../config/firebase';
-
 //interestTag의 문서명은 uid이다. 
 //interestTag를 불러주고. 필드명은 카테고리임. 
 //user값을 불러오긴해야함.-> 읽어야할 값은 부분우선순위. 
@@ -17,7 +16,6 @@ import { db } from '../config/firebase';
 export default function AutoPreferPriority() {
   const [users, setUsers] = useState([]);// db users
   const [interestTag,setInterestTag]  = useState([]); //db interestTag
-  
     useEffect(() => { //컴포넌트 마운트 될 때 컬렉션 문서 읽어오기
       const fetchData = async () => {
         try{
@@ -80,6 +78,7 @@ export default function AutoPreferPriority() {
               }
             });
             return preferedInterests;
+            
 
           };
 
