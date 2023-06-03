@@ -47,6 +47,15 @@ export default function BuddyForm(props) {
         console.log(`entities: ${entities} pred_tags: ${pred_tags}`)
 
         //** interestTag collection에 추출한 키워드 올리기 
+        // await setDoc(doc(db, "interestTag", currentUser.uid),{
+        //   Charity:
+        //   Creativity:
+        //   Ent:
+        //   Fitness:
+        //   Food:
+        //   Music:
+        //   Tech: 
+        // });
         
         } catch(error){
           console.error(error);
