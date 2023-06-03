@@ -38,4 +38,3 @@ logs
 # Firebase service account key file
 /serviceAccountKey.json
 
-.env

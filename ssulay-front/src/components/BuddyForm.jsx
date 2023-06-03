@@ -1,9 +1,10 @@
 import React,{useState, useContext} from 'react'
 import './BuddyForm.css';
 import {db} from "../config/firebase"
-import {doc,setDoc,collection, getDocs, updateDoc } from "firebase/firestore";
+import {doc,setDoc, updateDoc } from "firebase/firestore";
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from "../context/AuthContext";
+import axios from 'axios';
 
 export default function BuddyForm(props) {
   const[answer_1, setAnswer_1]=useState('');
@@ -36,10 +37,32 @@ export default function BuddyForm(props) {
         await updateDoc(userRef, {
           isSubmitted: true,
         });
-        navigate("/buddyform/complete");
-        } catch (err) {
-          console.log(err);
+        //** 키워드 추출 API 호출 
+        console.log(typeof(answer_1+answer_2+answer_3))
+        const response = await axios.post ('/ner_inference',{
+          params: {text: answer_1+answer_2+answer_3},
+        });
+        const entities= response.data.entities;
+        const pred_tags= response.data.pred_tags; 
+        console.log(`entities: ${entities} pred_tags: ${pred_tags}`)
+
+        //** interestTag collection에 추출한 키워드 올리기 
+        // await setDoc(doc(db, "interestTag", currentUser.uid),{
+        //   Charity:
+        //   Creativity:
+        //   Ent:
+        //   Fitness:
+        //   Food:
+        //   Music:
+        //   Tech: 
+        // });
+        
+        } catch(error){
+          console.error(error);
         }
+
+        
+        navigate("/buddyform/complete");
   };
 
   return (
