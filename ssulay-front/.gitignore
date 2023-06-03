@@ -21,3 +21,21 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+# Cache and logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs
+*.log
+
+# Other
+*.swp
+.DS_Store
+
+# Firebase configuration files
+/src/config/firebase.js
+
+# Firebase service account key file
+/serviceAccountKey.json
+
+.env

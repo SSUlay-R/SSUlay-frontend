@@ -67,6 +67,7 @@ const handlePageOpenBtn=()=>{
         <div className="matching-result-container">
           <h1 className="admin-page-title">매칭 결과</h1>
           <hr />
+          
           <div className="result-table-container"></div>
         </div>
       </div>
