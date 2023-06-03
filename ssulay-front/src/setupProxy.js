@@ -10,7 +10,7 @@ module.exports = function(app) {
   );
 
   app.use(
-    '/ner_interface',
+    '/ner_inference',
     createProxyMiddleware({
       target: process.env.REACT_APP_API_TARGET,
       changeOrigin: true,
