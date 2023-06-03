@@ -20,13 +20,13 @@ export default function BuddyProgramPage() {
         const userRef = doc(db, 'users', user.uid);
         const docSnap = await getDoc(userRef);
         if (docSnap.exists()) {
-          console.log('Document data:', docSnap.data());
+          //console.log('Document data:', docSnap.data());
           setUserData(docSnap.data())
         } else {
-          console.log('No such document!');
+          //console.log('No such document!');
         }
       } else {
-        console.log('User is null.');
+        //console.log('User is null.');
         setUserData(null);
       }
     };
