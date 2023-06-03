@@ -1,7 +1,12 @@
 import React, { useState, useContext } from 'react';
 import './BuddyForm.css';
+<<<<<<< HEAD
 import { db } from "../config/firebase";
 import { doc, setDoc, updateDoc } from "firebase/firestore";
+=======
+import {db} from "../config/firebase"
+import {doc,setDoc, updateDoc } from "firebase/firestore";
+>>>>>>> d78a859ce07b6b490dfcf411afac728ab243f06d
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from "../context/AuthContext";
 import axios from 'axios';
@@ -31,6 +36,7 @@ export default function BuddyForm(props) {
     e.preventDefault();
     
     try {
+<<<<<<< HEAD
       const form = answer_1 + answer_2 + answer_3;
       
       // Send form to API for keyword extraction
@@ -54,6 +60,43 @@ export default function BuddyForm(props) {
     } catch (err) {
       console.log(err);
     }
+=======
+        //create form on firestore
+        await setDoc(doc(db, "form", currentUser.uid), {
+              uid: currentUser.uid,
+              form: answer_1+answer_2+answer_3,
+        });
+        const userRef = doc(db, 'users', currentUser.uid); // replace "currentUser" with the current user's ID
+        await updateDoc(userRef, {
+          isSubmitted: true,
+        });
+        //** 키워드 추출 API 호출 
+        console.log(typeof(answer_1+answer_2+answer_3))
+        const response = await axios.post ('/ner_inference',{
+          params: {text: answer_1+answer_2+answer_3},
+        });
+        const entities= response.data.entities;
+        const pred_tags= response.data.pred_tags; 
+        console.log(`entities: ${entities} pred_tags: ${pred_tags}`)
+
+        //** interestTag collection에 추출한 키워드 올리기 
+        // await setDoc(doc(db, "interestTag", currentUser.uid),{
+        //   Charity:
+        //   Creativity:
+        //   Ent:
+        //   Fitness:
+        //   Food:
+        //   Music:
+        //   Tech: 
+        // });
+        
+        } catch(error){
+          console.error(error);
+        }
+
+        
+        navigate("/buddyform/complete");
+>>>>>>> d78a859ce07b6b490dfcf411afac728ab243f06d
   };
 
   return (
