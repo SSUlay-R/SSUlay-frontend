@@ -10,12 +10,12 @@ export default function CompletePage() {
     const fetchData = async () => {
       const preferedInterests = ['sports', 'apple', 'dance','television','pizza']; // 더미 데이터로 채워주세요
       const tagInterests = ['baseball', 'study', 'cafe']; // 더미 데이터로 채워주세요
-
+      let totalSimilarity=0;
       const arr = [];
       for (const preferedInterest of preferedInterests) {
         let avgSimilarity = 0;
         const count = preferedInterests.length * tagInterests.length;
-        const weight = 1 / Math.sqrt(count);
+        // const weight = 1 / Math.sqrt(count);
 
         for (const tagInterest of tagInterests) {
           let similarity = null;
@@ -24,21 +24,20 @@ export default function CompletePage() {
               params: { keyword1: preferedInterest, keyword2: tagInterest },
             });
             similarity = response.data.similarity;
+            avgSimilarity += similarity
             console.log(`Similarity between ${preferedInterest} and ${tagInterest}: ${similarity}`);
           } catch (error) {
             console.error(error);
           }
-
-          avgSimilarity += similarity * weight;
-          console.log(`Intermediate avgSimilarity: ${avgSimilarity}`);
         }
+          avgSimilarity /= tagInterests.length;
+          totalSimilarity += avgSimilarity;
+          arr.push({ similarity: avgSimilarity });
 
-        avgSimilarity /= count;
-        console.log(`Final avgSimilarity: ${avgSimilarity}`);
-        arr.push({ similarity: avgSimilarity });
       }
-
+      const similarityAverage = totalSimilarity / preferedInterests.length;
       setSimilarityArr(arr);
+      console.log(`similarity Average: ${similarityAverage}`);
     };
 
     fetchData();
@@ -54,7 +53,8 @@ export default function CompletePage() {
           <button className="submit-btn">Confirm</button>
         </Link>
         {similarityArr.length > 0 ? (
-          <p>Similarity: {similarityArr.map((item) => item.similarity).join(', ')}</p>
+            <p>Similarity: {similarityArr.map((item) => item.similarity).join(', ')}</p>
+          
         ) : (
           <p>Loading</p>
         )}
