@@ -2,6 +2,20 @@ import React from 'react';
 import { doc, setDoc ,collection, getDocs, updateDoc,getDoc } from "firebase/firestore";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../config/firebase";
+import ent1 from '../form/ent/ent1.json';
+import fitness1 from '../form/fitness/fitness1.json';
+import food1 from '../form/food/food1.json';
+import music1 from '../form/music/music1.json';
+import ent2 from '../form/ent/ent2.json';
+import ent3 from '../form/ent/ent3.json';
+import ent4 from '../form/ent/ent4.json';
+import ent5 from '../form/ent/ent5.json';
+import fitness2 from '../form/fitness/fitness2.json';
+import food2 from '../form/food/food2.json';
+import food3 from '../form/food/food3.json';
+import food4 from '../form/food/food4.json';
+import music2 from '../form/music/music2.json';
+import music3 from '../form/music/music3.json';
 
 export default function DummyDataCreator() {
   const nationality = ['USA', 'Japan', 'China', 'UK', 'Canada', 'Australia', 'Germany', 'France', 'Spain', 'Sweden', 'Netherlands', 'Finland'];
@@ -283,7 +297,7 @@ export default function DummyDataCreator() {
       const dummyKakaoId = `dummyKakaoId${i}`;
       const dummyInstagramId = `dummyInstagramId${i}`;
       const dummyBuddyNum = "1";
-      const preferedBuddy = getRandomSubarray(KoreanNames,4); 
+      //const preferedBuddy = getRandomSubarray(KoreanNames,4); 
       try {
         // Create user
         const res = await createUserWithEmailAndPassword(auth, dummyEmail, dummyPassword);
@@ -387,7 +401,7 @@ export default function DummyDataCreator() {
           foreignUidList.push(doc.id);
         }
       });
-    
+      console.log(koreanUidList);
       // Handle Korean users - prefer buddies from foreignUidList
       for(let i = 0; i < koreanUidList.length; i++){
         const userRef = doc(db, 'users', koreanUidList[i]);
@@ -416,11 +430,84 @@ export default function DummyDataCreator() {
       alert("Preferred buddies created for each user");
     };
     
+    const createDummyForm = async () => {
+      const koreanFormPaths = [
+        ent1,
+        fitness1,
+        food1,
+        music1,
+      ];
+      const foreignFormPaths = [
+        ent2,
+        ent3,
+        ent4,
+        ent5,
+        fitness2,
+        food2,
+        food3,
+        food4,
+        music2,
+        music3,
+      ];
+      const usersSnapshot = await getDocs(collection(db, 'users'));
+        const uidList = [];
+        const foreignUidList = []; //외국인 애들
+        const koreanUidList = [];//한국인 애들
+        //한국인 외국인 나누기
+        
+        usersSnapshot.forEach((doc) => {
+          uidList.push(doc.id);
+          const user = doc.data();
+          if (user.nationality === 'Korea') {
+            koreanUidList.push(doc.id);
+          } else {
+            foreignUidList.push(doc.id);
+          }
+        });
+        //console.log(koreanUidList);
+        //한국인 학생들 form 만들기
+        for(let i = 0; i < koreanUidList.length; i++){
+          const userRef = doc(db, 'users', koreanUidList[i]);
+          const userSnapshot = await getDoc(userRef);
+          const userData = userSnapshot.data();
+          const form = koreanFormPaths[i];
+          //create form on firestore
+          await setDoc(doc(db, "form", userData.uid), {
+            name: userData.userName,
+            form: form.form,
+          });
+          
+          await updateDoc(userRef, {
+            isSubmitedForm: true,
+          });
+          /*axios 통신을 통해 interestTags 입력 코드*/
+        }
+        //외국인 학생들 form 만들기
+        for(let i = 0; i < foreignUidList.length; i++){
+          const userRef = doc(db, 'users', foreignUidList[i]);
+          const userSnapshot = await getDoc(userRef);
+          const userData = userSnapshot.data();
+          const form = foreignFormPaths[i];
+          //create form on firestore
+          await setDoc(doc(db, "form", userData.uid), {
+            name: userData.userName,
+            form: form.form,
+          });
+          
+          await updateDoc(userRef, {
+            isSubmitedForm: true,
+          });
+          /*axios 통신을 통해 interestTags 입력 코드*/
+        }
+        
+    } 
+
   return (
     <div>
       <button onClick={createForeignDummyData}>Create Foreign Dummy Data</button>
       <button onClick={createKoreanDummyData}>Create Korean Dummy Data</button>
       <button onClick={createPreferedBuddy}>Create Prefered Buddy</button>
+      <button onClick={createDummyForm}>Create Dummy Form</button>
     </div>
     
   );
