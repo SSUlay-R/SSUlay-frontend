@@ -24,10 +24,10 @@ export default function BuddySearch() {
           const data = doc.data();
           return {
             userName: data.userName,
-            interests: data.interestTags.join(", "),
-            lifestyle: data.lifestyleTags.join(", "),
+            interests: data.interestTags ? data.interestTags.join(", ") : "",
+            lifestyle: data.lifestyleTags ? data.lifestyleTags.join(", ") : "",
             uid: data.uid,
-          };
+          };          
         });
         setUsers(userList);
         console.log(userList); // Add this line to log your users data
@@ -38,23 +38,13 @@ export default function BuddySearch() {
   
 
   const interests = [
-    
-    "Food&Drink",
-    "Cooking",
-    "Reading",
-    "Traveling",
-    "Pets",
-    "Going out",
-    "Outdoors",
-    "Sports",
-    "Entertainment",
-    "Arts",
-    "Music",
-    "Fashion&Style",
+    "Charity",
     "Creativity",
-    "Gaming",
-    "Technology",
-    "etc"
+    "Ent",
+    "Fitness",
+    "Food",
+    "Music",
+    "Tech"
   ];
   const lifestyles=[
     "Fitness", //Diet and Nutirition
