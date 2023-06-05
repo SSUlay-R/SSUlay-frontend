@@ -1,7 +1,7 @@
 import React,{useState, useContext} from 'react'
 import './BuddyForm.css';
 import {db} from "../config/firebase"
-import {doc,setDoc, updateDoc } from "firebase/firestore";
+import {doc,setDoc, updateDoc, getDoc } from "firebase/firestore";
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from "../context/AuthContext";
 import axios from 'axios';
@@ -28,20 +28,26 @@ export default function BuddyForm(props) {
     console.log(currentUser);
     e.preventDefault(); 
     try {
+        const userRef = doc(db, 'users', currentUser.uid);
+        const userSnapshot = await getDoc(userRef);
+        const userData = userSnapshot.data();
+        await updateDoc(userRef, {
+          isSubmittedForm: true,
+        });
         //create form on firestore
         await setDoc(doc(db, "form", currentUser.uid), {
-              uid: currentUser.uid,
+              uid: userData.userName,
               form: answer_1+answer_2+answer_3,
         });
-        const userRef = doc(db, 'users', currentUser.uid); // replace "currentUser" with the current user's ID
-        await updateDoc(userRef, {
-          isSubmitted: true,
-        });
+         // replace "currentUser" with the current user's ID
         //** 키워드 추출 API 호출 
-        console.log(typeof(answer_1+answer_2+answer_3))
+        // console.log(typeof(answer_1+answer_2+answer_3))
+        // const response = await axios.post('/ner_inference', {
+        //   text: answer_1 + answer_2 + answer_3,
+        // });       
         const response = await axios.post ('/ner_inference',{
-          params: {text: answer_1+answer_2+answer_3},
-        });
+            params: {text: answer_1 + answer_2 + answer_3},
+          }); 
         const entities= response.data.entities;
         const pred_tags= response.data.pred_tags; 
         console.log(`entities: ${entities} pred_tags: ${pred_tags}`)
@@ -62,7 +68,7 @@ export default function BuddyForm(props) {
         }
 
         
-        navigate("/buddyform/complete");
+        //navigate("/buddyform/complete");
   };
 
   return (
