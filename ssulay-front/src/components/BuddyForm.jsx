@@ -1,7 +1,12 @@
 import React, { useState, useContext } from 'react';
 import './BuddyForm.css';
+<<<<<<< HEAD
 import { db } from '../config/firebase';
 import { doc, setDoc, updateDoc } from 'firebase/firestore';
+=======
+import {db} from "../config/firebase"
+import {doc,setDoc, updateDoc, getDoc } from "firebase/firestore";
+>>>>>>> df4bce1db3d6ef80b2ddc921e9916278442dc601
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
