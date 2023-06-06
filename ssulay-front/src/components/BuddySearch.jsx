@@ -24,8 +24,8 @@ export default function BuddySearch() {
           const data = doc.data();
           return {
             userName: data.userName,
-            interests: data.interestTags.join(", "),
-            lifestyle: data.lifestyleTags.join(", "),
+            interests: data.interestTags,
+            lifestyle: data.lifestyleTags,
             uid: data.uid,
           };
         });
