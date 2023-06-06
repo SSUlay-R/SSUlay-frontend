@@ -237,7 +237,6 @@ export default function DummyDataCreator() {
       });
       //interestTag 문서 생성
       await setDoc(doc(db, "interestTag", userData.uid), {
-        name: userData.userName,
         Fitness: flattenArray(form.Fitness),
         Creativity: flattenArray(form.Creativity),
         Food: flattenArray(form.Food),
@@ -265,7 +264,6 @@ export default function DummyDataCreator() {
       //interestTag 문서 생성
       //interestTag 문서 생성
       await setDoc(doc(db, "interestTag", userData.uid), {
-        name: userData.userName,
         Fitness: flattenArray(form.Fitness),
         Creativity: flattenArray(form.Creativity),
         Food: flattenArray(form.Food),
