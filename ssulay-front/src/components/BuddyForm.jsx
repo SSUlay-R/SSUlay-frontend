@@ -1,12 +1,7 @@
 import React, { useState, useContext } from 'react';
 import './BuddyForm.css';
-<<<<<<< HEAD
-import { db } from '../config/firebase';
-import { doc, setDoc, updateDoc } from 'firebase/firestore';
-=======
 import {db} from "../config/firebase"
-import {doc,setDoc, updateDoc, getDoc } from "firebase/firestore";
->>>>>>> df4bce1db3d6ef80b2ddc921e9916278442dc601
+import {doc,setDoc, updateDoc} from "firebase/firestore";
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
@@ -54,11 +49,11 @@ export default function BuddyForm(props) {
       //   Charity: keyword_vectors.includes('CHARITY'),
       //   Creativity: keyword_vectors.includes('ART'),
       //   Ent: keyword_vectors.includes('ENT'),
-      //   Fitness: false, // You can change this based on your requirements
-      //   Food: keyword_vectors.includes('FOOD'),
-      //   Music: keyword_vectors.includes('MUSIC'),
-      //   Tech: keyword_vectors.includes('TECH'),
-      // });
+      // //   Fitness: false, // You can change this based on your requirements
+      // //   Food: keyword_vectors.includes('FOOD'),
+      // //   Music: keyword_vectors.includes('MUSIC'),
+      // //   Tech: keyword_vectors.includes('TECH'),
+      // // });
     } catch (error) {
       console.error(error.response);
     }

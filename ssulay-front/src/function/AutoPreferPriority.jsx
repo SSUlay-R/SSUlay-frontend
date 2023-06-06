@@ -26,8 +26,9 @@ export default function AutoPreferPriority() {
           const userList= userSnapshot.docs.map(doc=>{
             const data= doc.data();
             return{
-              uid:data.id, //uid
-              preferedList:data.preferedBuddy, //배열 값
+              uid:doc.id, //uid
+              preferedList:data.preferedBuddy, 
+              name:data.userName,
             };
           });
           setUsers(userList);
@@ -39,91 +40,18 @@ export default function AutoPreferPriority() {
             const interests = Object.values(data).flat(); //각 필드의 하위 데이터 값들만 담음
             return{
               owner:doc.id, //해당 interests항목의 주인
-              interests:interests, //const firstInterest = interestTagList[0].interests[0];
+              charity: data.Charity,
+              creativity: data.creativity,
+              ent: data.Ent,
+              fitness: data.Fitness,
+              food:data.Food,
+              music: data.Music,
+              interests:interests,
             };
           });
           setInterestTag(interestTagList);
           console.log("InterestList:",interestTagList);
 
-          //실행할 로직들
-          userList.forEach(async (user)=>{
-            const nonPreferedList = setNonPreferedList(user); //부분선호도에 선택되지 않은 uid 담기 
-            const preferedInterests= setPreferedInterests(user.preferedList); //preferedList에 있는 유저들의 interest태그들만 모으도록 설정
-            const similarityArr= getSimilarity(preferedInterests, nonPreferedList); //부분선호 우선순위와 유사도 구하기 
-            const sortedSimilarity= sortSimilarity(similarityArr); //유사도 순으로 내림차순 정렬한 배열 -uid만 담김
-            const updatedPreferedBuddy = [...user.preferedBuddy, ...sortedSimilarity]; //완성된 우선순위배열
-            await setDoc(doc(db, 'users', user.uid),{ //db에 업데이트
-              preferedBuddy:updatedPreferedBuddy
-            })
-        
-            
-            //db에 올리기 
-          });
-
-          const setNonPreferedList =(user)=>{
-            const { uid, preferedList } = user; //uid= 인자로 들어온 유저의 uid, preferedList= 인자로 들어온 유저의 preferedList
-            const nonPreferedList= []
-            users.forEach((otherUser) => {
-              if (otherUser.uid !== uid && !preferedList.includes(otherUser.uid)) {
-                nonPreferedList.push(otherUser.uid);
-              }
-            });
-            return nonPreferedList;
-          };
-
-          const setPreferedInterests =(preferedList)=>{
-            const preferedInterests=[];
-            preferedList.forEach ((uid) => {
-              const interestTag= interestTagList.find((tag)=> tag.owner===uid);
-              if (interestTag){
-                preferedInterests.push(...interestTag.interests);
-              }
-            });
-            return preferedInterests;
-            
-
-          };
-
-          const getSimilarity = async (preferedInterests, nonPreferedList) => {
-            const similarityArr = [];
-            for (const nonPreferedUser of nonPreferedList) {
-              let avgSimilarity = 0;
-              const tagArr = interestTagList.find((tag) => tag.owner === nonPreferedUser);
-              const count = preferedInterests.length * tagArr.interests.length;
-              const weight = 1 / Math.sqrt(count);
-        
-              for (const preferedInterest of preferedInterests) {
-                for (const tagInterest of tagArr.interests) {
-                  let similarity = null;
-                  try {
-                    const response = await axios.get('/similarity', {
-                      params: { keyword1: preferedInterest, keyword2: tagInterest },
-                    });
-                    similarity = response.data.similarity;
-                  } catch (error) {
-                    console.error(error);
-                  }
-        
-                  const weightedSimilarity = similarity * weight;
-                  avgSimilarity += weightedSimilarity;
-        
-                  console.log(`Weighted similarity: ${weightedSimilarity}, Average similarity: ${avgSimilarity}`);
-                }
-              }
-        
-              avgSimilarity /= count;
-              similarityArr.push({ uid: nonPreferedUser, similarity: avgSimilarity });
-            }
-        
-            return similarityArr;
-          };
-
-          const sortSimilarity=(arr)=>{
-            const sortedSimilarity = arr.sort((a, b) => b.similarity - a.similarity); //유사도 기준으로 내림차순 정렬
-            console.log("sortedSimilarity:",sortedSimilarity);
-            const sortedUIDs = sortedSimilarity.map((item) => item.uid); //uid값만 빼서 리턴
-            return sortedUIDs;
-          };
         } catch (error) {
           console.error('Error fetching documents:', error);
         }        
@@ -131,6 +59,75 @@ export default function AutoPreferPriority() {
       fetchData();
     }, []);
 
-    
-    
+    useEffect (()=>{
+      // 실행할 로직들
+      users.forEach(async (user)=>{
+        const nonPreferedList = setNonPreferedList(user); //부분선호도에 선택되지 않은 uid 담기 
+        console.log(`nonPreferedList-${user.name}:`,nonPreferedList);
+        const preferedInterests= setPreferedInterests(user.preferedList); //preferedList에 있는 유저들의 interest태그들만 모으도록 설정
+        console.log(`preferedInterests-${user.name}:`,preferedInterests);
+        const similarityArr= getSimilarity(preferedInterests, nonPreferedList); //부분선호 우선순위와 유사도 구하기 
+        console.log("similarityArr:",similarityArr);
+        // const sortedSimilarity= sortSimilarity(similarityArr); //유사도 순으로 내림차순 정렬한 배열 -uid만 담김
+        //const updatedPreferedBuddy = [...user.preferedBuddy, ...sortedSimilarity]; //완성된 우선순위배열
+        // await setDoc(doc(db, 'users', user.uid),{ //db에 업데이트
+        //   preferedBuddy:updatedPreferedBuddy
+        // })
+      });
+
+        function setNonPreferedList(user){ 
+          const { uid, preferedList } = user; //uid= 인자로 들어온 유저의 uid, preferedList= 인자로 들어온 유저의 preferedList
+          const nonPreferedList= []
+          users.forEach((otherUser) => {
+            if (otherUser.uid !== uid && !preferedList.includes(otherUser.uid)) {
+              nonPreferedList.push(otherUser.uid);
+            }
+          });
+          return nonPreferedList;
+        };
+        function setPreferedInterests (preferedList){ //부분선호도에 있는 유저들의 interestTag concat
+          const preferedInterests=[];
+          preferedList.forEach ((uid) => {
+            const targetInterest= interestTag.find((tag)=> tag.owner===uid);
+            if (targetInterest){
+              preferedInterests.push(...targetInterest.interests);
+            }
+          });
+          return preferedInterests;
+        }
+
+        async function getSimilarity (preferedInterests, nonPreferedList){
+          let similarityArr = []; //부분선호도에 없던 유저들에 대한 유사도 리스트
+          const preferedInterestsStr= preferedInterests.join(','); //params에 넣기위해 타입변환
+          for (const nonPreferedUser of nonPreferedList) {
+            try{
+              const targetUser = interestTag.find((tag) => tag.owner === nonPreferedUser);
+              const targetInterests=targetUser.interests.join(','); //비교할 사람의 interestTags
+              const response= await axios.get('/similarity',{
+                params:{ keyword1:preferedInterestsStr, keyword2: targetInterests},
+              });
+              const similarity= response.data.similarity;
+              similarityArr.push({ uid: targetUser, similarity: similarity });
+          } catch (error) {
+                  console.error(error);
+            }
+          }
+          return similarityArr;
+        };
+    },[users,interestTag]);        
+
+
+      
+
+      // const sortSimilarity=(arr)=>{
+      //   const sortedSimilarity = arr.sort((a, b) => b.similarity - a.similarity); //유사도 기준으로 내림차순 정렬
+      //   console.log("sortedSimilarity:",sortedSimilarity);
+      //   const sortedUIDs = sortedSimilarity.map((item) => item.uid); //uid값만 빼서 리턴
+      //   return sortedUIDs;userList.forEach(async (user)=>{
+        // const nonPreferedList = setNonPreferedList(user); //부분선호도에 선택되지 않은 uid 담기 
+        // const preferedInterests= setPreferedInterests(user.preferedList); //preferedList에 있는 유저들의 interest태그들만 모으도록 설정
+        // const similarityArr= getSimilarity(preferedInterests, nonPreferedList); //부분선호 우선순위와 유사도 구하기 
+        // const sortedSimilarity= sortSimilarity(similarityArr); //유사도 순으로 내림차순 정렬한 배열 -uid만 담김
+      
+      // };
 }
