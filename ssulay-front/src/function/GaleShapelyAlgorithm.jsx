@@ -94,7 +94,7 @@ export default function GaleShapelyAlgorithm(props) {
         return false;
     }
 
-    // 안정적인 매칭을 찾는 함수
+    // 안정적인 매칭을 찾는 함수 여기는 배열만 완벽하면 무조건 잘 돌아감 고칠필요 X
     function stableMatching(internationalStudentPrefernces, domesticStudentPreferences, quota) {
         let n = internationalStudentPrefernces.length;
         let m = domesticStudentPreferences.length;
@@ -186,8 +186,7 @@ export default function GaleShapelyAlgorithm(props) {
         const domesticStudentPreferences = koreanUsers.map(user => user.preferedBuddy);
         //console.log(internationalStudentPrefernces);
         //console.log(domesticStudentPreferences);
-        // Get quota from some data source
-        // I'll just put an arbitrary value here. You should replace it with actual quota data
+        //quota는 한국인들 버디 수
         const quota = koreanUsers.map(user => user.buddyNum);
         // Calculate results
         const uidMatchingResult = stableMatching(internationalStudentPrefernces, domesticStudentPreferences, quota);
