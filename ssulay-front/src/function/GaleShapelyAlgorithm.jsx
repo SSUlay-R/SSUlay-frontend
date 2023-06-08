@@ -4,6 +4,7 @@ import { db } from '../config/firebase';
 
 // Gale-Shapely 알고리즘 함수 구현
 export default function GaleShapelyAlgorithm(props) {
+    const { isMatchingStarted } = props;
     // 결과를 출력하기 위한 state 정의
     const [result, setResult] = useState([]);
 
@@ -75,10 +76,14 @@ export default function GaleShapelyAlgorithm(props) {
 
             setForeignUsers(foreignUsers);
             setKoreanUsers(koreanUsers);
+
+            if (isMatchingStarted) {
+                runAlgorithm();
+            }
         };
         // 데이터를 가져옴
         fetchData();
-    }, []);
+    }, [isMatchingStarted]);
 
     // 새 파트너를 더 선호하는지 확인하는 함수
     function prefersNewPartner(domesticStudentPreferences, domesticStudent, newPartner, currentPartner) {
@@ -177,16 +182,11 @@ export default function GaleShapelyAlgorithm(props) {
         }
     }
     
-
-
-    // 버튼 클릭 시 알고리즘을 실행하는 함수
-    function handleClick() {
+    // 알고리즘을 실행하는 함수
+    function runAlgorithm() {
         // Get preferences from the user data
         const internationalStudentPrefernces = foreignUsers.map(user => user.preferedBuddy);
         const domesticStudentPreferences = koreanUsers.map(user => user.preferedBuddy);
-        //console.log(internationalStudentPrefernces);
-        //console.log(domesticStudentPreferences);
-        //quota는 한국인들 버디 수
         const quota = koreanUsers.map(user => user.buddyNum);
         // Calculate results
         const uidMatchingResult = stableMatching(internationalStudentPrefernces, domesticStudentPreferences, quota);
@@ -194,15 +194,15 @@ export default function GaleShapelyAlgorithm(props) {
         setResult(uidMatchingResult);
         uploadToFirebase(uidMatchingResult).catch(console.error);
     }
-    // 결과를 보여주는 UI 반환
-    return (
-        <div>
-            <button onClick={handleClick}>Run Algorithm</button>
-            <ul>
-                {result.map((item, index) => (
-                    <li key={index}>Korean student UID: {item.studentUid}, Buddy UID: {item.buddyUid}</li>
-                ))}
-            </ul>
-        </div>
-    );
+
+    // // 결과를 보여주는 UI 반환
+    // return (
+    //     <div>
+    //         <ul>
+    //             {result.map((item, index) => (
+    //                 <li key={index}>Korean student UID: {item.studentUid}, Buddy UID: {item.buddyUid}</li>
+    //             ))}
+    //         </ul>
+    //     </div>
+    // );
 }
