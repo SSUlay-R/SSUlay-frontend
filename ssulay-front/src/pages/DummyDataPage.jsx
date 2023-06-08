@@ -16,7 +16,7 @@ import food3 from '../form/food/food3.json';
 import food4 from '../form/food/food4.json';
 import music2 from '../form/music/music2.json';
 import music3 from '../form/music/music3.json';
-import axios from 'axios';
+
 
 export default function DummyDataCreator() {
   const nationality = ['USA', 'Japan', 'China', 'UK', 'Canada', 'Australia', 'Germany', 'France', 'Spain', 'Sweden', 'Netherlands', 'Finland'];

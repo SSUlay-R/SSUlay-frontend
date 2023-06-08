@@ -35,6 +35,11 @@ export default function GaleShapelyAlgorithm(props) {
                     nationality: data.nationality,
                     preferedBuddy: data.preferedBuddy,
                     buddyNum: data.buddyNum,
+                    // email: data.email,
+                    // instagram: data.instagram,
+                    // kakaoId: data.kakaoId,
+                    // phoneNumber: data.phoneNumber,
+                    // studentNumber: data.studentNumber,
                 };
             });
 
@@ -165,7 +170,7 @@ export default function GaleShapelyAlgorithm(props) {
         for (let i = 0; i < domesticStudentPreferences.length; i++) {
             const matchedForeignStudentUids = stableMatchingResult[i].map(index => foreignIndexToUid[index]);
             for (let j = 0; j < matchedForeignStudentUids.length; j++) {
-                uidMatchingResult.push({ studentUid: matchedForeignStudentUids[j], buddyUid: koreanIndexToUid[i] });
+                uidMatchingResult.push({ studentUid: matchedForeignStudentUids[j], buddyUid: [koreanIndexToUid[i]] });
             }
             uidMatchingResult.push({ studentUid: koreanIndexToUid[i], buddyUid: matchedForeignStudentUids });
         }
@@ -193,6 +198,7 @@ export default function GaleShapelyAlgorithm(props) {
         // Update the result state
         setResult(uidMatchingResult);
         uploadToFirebase(uidMatchingResult).catch(console.error);
+        return result;
     }
 
     // // 결과를 보여주는 UI 반환
