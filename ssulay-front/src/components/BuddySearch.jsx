@@ -3,7 +3,7 @@ import "./BuddySearch.css";
 import ResultTag from './ResultTag';
 import TagBlock from './TagBlock';
 import Table from './Table';
-import { collection, getDocs, doc, updateDoc, getDoc } from "firebase/firestore";
+import { collection, getDocs, doc, updateDoc, getDoc, query, where } from "firebase/firestore";
 import { db } from '../config/firebase';
 import { AuthContext } from "../context/AuthContext";
 
@@ -18,10 +18,23 @@ export default function BuddySearch() {
   //DB에서 users 가져오기
   useEffect(() => {
     const fetchData = async () => {
-      const usersCollection = collection(db, 'users');
-      const userSnapshot = await getDocs(usersCollection);
+      //console.log(currentUser.uid)
+      if (currentUser && currentUser.uid) {
+      const userRef = doc(db,'users',currentUser.uid);
+      const userSnapshot = await getDoc(userRef);
+      const userData = userSnapshot.data();
 
-      const userListPromises = userSnapshot.docs.map(async (doc1) => {
+      let q;
+      let userSnapshot2;
+  
+      if(userData.nationality ==="Korea"){
+        q = query(collection(db, "users"), where("nationality", "!=", "Korea"));
+        userSnapshot2 = await getDocs(q);
+      } else{
+        q = query(collection(db, "users"), where("nationality", "==", "Korea"));
+        userSnapshot2 = await getDocs(q);
+      }
+      const userListPromises = userSnapshot2.docs.map(async (doc1) => {
         const data = doc1.data();
         const tagRef = doc(db, 'interestTag', data.uid);
         const tagSnapshot = await getDoc(tagRef);
@@ -49,10 +62,11 @@ export default function BuddySearch() {
 
       setUsers(userList);
       console.log(userList); // Add this line to log your users data
+    }
     };
 
     fetchData();
-  }, []);
+  },[currentUser && currentUser.uid]);
 
 
 

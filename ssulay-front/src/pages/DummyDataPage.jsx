@@ -16,7 +16,7 @@ import food3 from '../form/food/food3.json';
 import food4 from '../form/food/food4.json';
 import music2 from '../form/music/music2.json';
 import music3 from '../form/music/music3.json';
-import axios from 'axios';
+
 
 export default function DummyDataCreator() {
   const nationality = ['USA', 'Japan', 'China', 'UK', 'Canada', 'Australia', 'Germany', 'France', 'Spain', 'Sweden', 'Netherlands', 'Finland'];
@@ -180,7 +180,7 @@ export default function DummyDataCreator() {
     // Handle foreign users - prefer buddies from koreanUidList
     for (let i = 0; i < foreignUidList.length; i++) {
       const userRef = doc(db, 'users', foreignUidList[i]);
-      const preferedBuddy = getRandomSubarray(koreanUidList, 2);//부분이니까 2 완성이면 4
+      const preferedBuddy = getRandomSubarray(koreanUidList, 4);//부분이니까 2 완성이면 4
 
       // Update the user's document with the preferred buddy list
       await updateDoc(userRef, {
@@ -237,7 +237,6 @@ export default function DummyDataCreator() {
       });
       //interestTag 문서 생성
       await setDoc(doc(db, "interestTag", userData.uid), {
-        name: userData.userName,
         Fitness: flattenArray(form.Fitness),
         Creativity: flattenArray(form.Creativity),
         Food: flattenArray(form.Food),
@@ -265,7 +264,6 @@ export default function DummyDataCreator() {
       //interestTag 문서 생성
       //interestTag 문서 생성
       await setDoc(doc(db, "interestTag", userData.uid), {
-        name: userData.userName,
         Fitness: flattenArray(form.Fitness),
         Creativity: flattenArray(form.Creativity),
         Food: flattenArray(form.Food),

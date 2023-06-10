@@ -4,6 +4,7 @@ import { db } from '../config/firebase';
 
 // Gale-Shapely 알고리즘 함수 구현
 export default function GaleShapelyAlgorithm(props) {
+    const { isMatchingStarted } = props;
     // 결과를 출력하기 위한 state 정의
     const [result, setResult] = useState([]);
 
@@ -34,6 +35,11 @@ export default function GaleShapelyAlgorithm(props) {
                     nationality: data.nationality,
                     preferedBuddy: data.preferedBuddy,
                     buddyNum: data.buddyNum,
+                    // email: data.email,
+                    // instagram: data.instagram,
+                    // kakaoId: data.kakaoId,
+                    // phoneNumber: data.phoneNumber,
+                    // studentNumber: data.studentNumber,
                 };
             });
 
@@ -75,10 +81,14 @@ export default function GaleShapelyAlgorithm(props) {
 
             setForeignUsers(foreignUsers);
             setKoreanUsers(koreanUsers);
+
+            if (isMatchingStarted) {
+                runAlgorithm();
+            }
         };
         // 데이터를 가져옴
         fetchData();
-    }, []);
+    }, [isMatchingStarted]);
 
     // 새 파트너를 더 선호하는지 확인하는 함수
     function prefersNewPartner(domesticStudentPreferences, domesticStudent, newPartner, currentPartner) {
@@ -94,7 +104,7 @@ export default function GaleShapelyAlgorithm(props) {
         return false;
     }
 
-    // 안정적인 매칭을 찾는 함수
+    // 안정적인 매칭을 찾는 함수 여기는 배열만 완벽하면 무조건 잘 돌아감 고칠필요 X
     function stableMatching(internationalStudentPrefernces, domesticStudentPreferences, quota) {
         let n = internationalStudentPrefernces.length;
         let m = domesticStudentPreferences.length;
@@ -160,7 +170,7 @@ export default function GaleShapelyAlgorithm(props) {
         for (let i = 0; i < domesticStudentPreferences.length; i++) {
             const matchedForeignStudentUids = stableMatchingResult[i].map(index => foreignIndexToUid[index]);
             for (let j = 0; j < matchedForeignStudentUids.length; j++) {
-                uidMatchingResult.push({ studentUid: matchedForeignStudentUids[j], buddyUid: koreanIndexToUid[i] });
+                uidMatchingResult.push({ studentUid: matchedForeignStudentUids[j], buddyUid: [koreanIndexToUid[i]] });
             }
             uidMatchingResult.push({ studentUid: koreanIndexToUid[i], buddyUid: matchedForeignStudentUids });
         }
@@ -177,33 +187,28 @@ export default function GaleShapelyAlgorithm(props) {
         }
     }
     
-
-
-    // 버튼 클릭 시 알고리즘을 실행하는 함수
-    function handleClick() {
+    // 알고리즘을 실행하는 함수
+    function runAlgorithm() {
         // Get preferences from the user data
         const internationalStudentPrefernces = foreignUsers.map(user => user.preferedBuddy);
         const domesticStudentPreferences = koreanUsers.map(user => user.preferedBuddy);
-        //console.log(internationalStudentPrefernces);
-        //console.log(domesticStudentPreferences);
-        // Get quota from some data source
-        // I'll just put an arbitrary value here. You should replace it with actual quota data
         const quota = koreanUsers.map(user => user.buddyNum);
         // Calculate results
         const uidMatchingResult = stableMatching(internationalStudentPrefernces, domesticStudentPreferences, quota);
         // Update the result state
         setResult(uidMatchingResult);
         uploadToFirebase(uidMatchingResult).catch(console.error);
+        return result;
     }
-    // 결과를 보여주는 UI 반환
-    return (
-        <div>
-            <button onClick={handleClick}>Run Algorithm</button>
-            <ul>
-                {result.map((item, index) => (
-                    <li key={index}>Korean student UID: {item.studentUid}, Buddy UID: {item.buddyUid}</li>
-                ))}
-            </ul>
-        </div>
-    );
+
+    // // 결과를 보여주는 UI 반환
+    // return (
+    //     <div>
+    //         <ul>
+    //             {result.map((item, index) => (
+    //                 <li key={index}>Korean student UID: {item.studentUid}, Buddy UID: {item.buddyUid}</li>
+    //             ))}
+    //         </ul>
+    //     </div>
+    // );
 }
