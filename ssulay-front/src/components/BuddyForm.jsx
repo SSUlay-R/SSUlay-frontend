@@ -75,7 +75,10 @@ export default function BuddyForm(props) {
       }
 
       await updateDoc(doc(db, 'interestTag', currentUser.uid), {
-        Fitness: keywords.exercise,
+        Exercise: keywords.exercise,
+        Food: keywords.food,
+        Instrument: keywords.instrument,
+        Music: keywords.musicgenre,
       });
     } catch (error) {
       console.error(error.response);
