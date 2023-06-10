@@ -64,7 +64,6 @@ export default function AutoPreferPriority() {
 
       function setNonPreferedList(user){
         const { uid, preferedList, name, nationality } = user;
-        console.log(`${name}'s ${nationality}- preferedlist ${preferedList}`);
         const nonPreferedList = [];
         users.forEach((otherUser) => {
             // For Korean users, add users of other nationalities
