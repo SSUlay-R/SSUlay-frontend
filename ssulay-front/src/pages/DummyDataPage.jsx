@@ -132,13 +132,11 @@ export default function DummyDataCreator() {
           preferedBuddy: [],
         });
         await setDoc(doc(db, "interestTag", res.user.uid), {
-          Fitness: [],
-          Creativity: [],
+          Exercise: [],
           Food: [],
-          Tech: [],
-          Charity: [],
+          Instrument: [],
           Music: [],
-          Ent: [],
+          KoreaAttraction: [],
         });
       } catch (err) {
         console.log(err);
@@ -237,18 +235,15 @@ export default function DummyDataCreator() {
       });
       //interestTag 문서 생성
       await setDoc(doc(db, "interestTag", userData.uid), {
-        Fitness: flattenArray(form.Fitness),
-        Creativity: flattenArray(form.Creativity),
+        Exercise: flattenArray(form.Fitness),
         Food: flattenArray(form.Food),
-        Tech: flattenArray(form.Tech),
-        Charity: flattenArray(form.Charity),
+        Instrument: [],
         Music: flattenArray(form.Music),
-        Ent: flattenArray(form.Ent),
+        KoreaAttraction: flattenArray(form.Ent),
       });
       await updateDoc(userRef, {
         isSubmitedForm: true,
       });
-      /*axios 통신을 통해 interestTags 입력 코드*/
     }
     //외국인 학생들 form 만들기
     for (let i = 0; i < foreignUidList.length; i++) {
@@ -264,22 +259,15 @@ export default function DummyDataCreator() {
       //interestTag 문서 생성
       //interestTag 문서 생성
       await setDoc(doc(db, "interestTag", userData.uid), {
-        Fitness: flattenArray(form.Fitness),
-        Creativity: flattenArray(form.Creativity),
+        Exercise: flattenArray(form.Fitness),
         Food: flattenArray(form.Food),
-        Tech: flattenArray(form.Tech),
-        Charity: flattenArray(form.Charity),
+        Instrument: [],
         Music: flattenArray(form.Music),
-        Ent: flattenArray(form.Ent),
+        KoreaAttraction: flattenArray(form.Ent),
       });
       await updateDoc(userRef, {
         isSubmitedForm: true,
       });
-      /*axios 통신을 통해 interestTags 입력 코드*/
-      // const response = await axios.post ('/ner_inference',{
-      //   params: {text: form.form},
-      // });
-
     }
   }
   return (

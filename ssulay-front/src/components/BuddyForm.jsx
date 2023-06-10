@@ -25,7 +25,7 @@ export default function BuddyForm(props) {
   };
 
   const handleSubmit = async (e) => {
-    console.log(currentUser);
+    //console.log(currentUser);
     e.preventDefault(); 
     try {
         const userRef = doc(db, 'users', currentUser.uid);
