@@ -1,15 +1,13 @@
-import React, { useMemo, useState, useContext, useEffect } from 'react';
-import { AuthContext } from '../context/AuthContext';
-import { useNavigate } from "react-router-dom";
+import React, { useMemo, useState } from 'react';
 import './AdminPage.css';
 import Table from '../components/Table';
 import Alert from 'react-bootstrap/Alert';
-import AutoPreferPriority from '../function/AutoPreferPriority';
 import GaleShapelyAlgorithm from '../function/GaleShapelyAlgorithm';
 import { doc, setDoc, collection, getDocs, updateDoc, getDoc } from "firebase/firestore";
 import { db } from '../config/firebase';
 
 export default function AdminPage() {
+
   const columns = useMemo(
     () => [
       {
@@ -51,16 +49,13 @@ export default function AdminPage() {
     return matchingResults;
   };
 
-  // 교환학생과 내국인 학생 데이터를 분류해야 함. 
   const [isMatchingStarted, setIsMatchingStarted] = useState(false);
   const [stateMessage, setStateMessage] = useState('');
-  const [isAutoPreferPriorityVisible, setIsAutoPreferPriorityVisible] = useState(false);
+  const [matchingResults, setMatchingResults] = useState([]);
 
-  const handleStartBtn=()=>{
+  const handleStartBtn = () => {
     setIsMatchingStarted(true);
-    setStateMessage('* 매칭이 시작되었습니다.');
-    setIsAutoPreferPriorityVisible(true);
-    //게일섀플리알고리즘 함수 돌리는거. h
+    setStateMessage('* 매칭이 시작되었습니다.')
   }
 
   const handlePageOpenBtn = async () => {
@@ -68,17 +63,7 @@ export default function AdminPage() {
   
     // 사용자와 매칭 결과를 가져옵니다.
     const users = await fetchUsers();
-    if (!users) {
-      console.error('No users found.');
-      return;
-    }
-    
     const rawMatchingResults = await fetchMatchingResults();
-    if (!rawMatchingResults) {
-      console.error('No matching results found.');
-      return;
-    }
-    
   
     // 매칭 결과를 원하는 형식으로 변환합니다.
     const userBuddies = Object.entries(rawMatchingResults).reduce((acc, [uid, matchingResult]) => {
@@ -116,7 +101,7 @@ export default function AdminPage() {
         return acc;
       }, []);
   
-  //   setMatchingResults(formattedMatchingResults); // 추가된 코드
+    setMatchingResults(formattedMatchingResults); // 추가된 코드
   }
   
   
@@ -130,7 +115,6 @@ export default function AdminPage() {
         <div className="process-container">
           <button className="process-btn" onClick={handleStartBtn} disabled={isMatchingStarted}>
             매칭 시작
-            {isAutoPreferPriorityVisible && <AutoPreferPriority />}
             <GaleShapelyAlgorithm isMatchingStarted={isMatchingStarted} />
           </button>
           <img className="arrow-img" alt="오른쪽 화살표" src="/assets/arrow.png" ></img>
@@ -146,9 +130,9 @@ export default function AdminPage() {
         <div className="matching-result-container">
           <h1 className="admin-page-title">매칭 결과</h1>
           <hr />
-          {/* <div className="result-table-container">
+          <div className="result-table-container">
             <Table columns={columns} data={matchingResults} />
-          </div> */}
+          </div>
         </div>
       </div>
     </>

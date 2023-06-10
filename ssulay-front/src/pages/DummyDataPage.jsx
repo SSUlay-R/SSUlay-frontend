@@ -178,7 +178,7 @@ export default function DummyDataCreator() {
     // Handle foreign users - prefer buddies from koreanUidList
     for (let i = 0; i < foreignUidList.length; i++) {
       const userRef = doc(db, 'users', foreignUidList[i]);
-      const preferedBuddy = getRandomSubarray(koreanUidList, 4);//부분이니까 2 완성이면 4
+      const preferedBuddy = getRandomSubarray(koreanUidList, 2);//부분이니까 2 완성이면 4
 
       // Update the user's document with the preferred buddy list
       await updateDoc(userRef, {
