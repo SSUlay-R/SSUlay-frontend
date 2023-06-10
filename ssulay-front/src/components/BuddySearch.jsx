@@ -18,70 +18,65 @@ export default function BuddySearch() {
   //DB에서 users 가져오기
   useEffect(() => {
     const fetchData = async () => {
-      //console.log(currentUser.uid)
+      console.log(currentUser.uid)
       if (currentUser && currentUser.uid) {
-      const userRef = doc(db,'users',currentUser.uid);
-      const userSnapshot = await getDoc(userRef);
-      const userData = userSnapshot.data();
+        const userRef = doc(db, 'users', currentUser.uid);
+        const userSnapshot = await getDoc(userRef);
+        const userData = userSnapshot.data();
+        let q;
+        let userSnapshot2;
 
-      let q;
-      let userSnapshot2;
-  
-      if(userData.nationality ==="Korea"){
-        q = query(collection(db, "users"), where("nationality", "!=", "Korea"));
-        userSnapshot2 = await getDocs(q);
-      } else{
-        q = query(collection(db, "users"), where("nationality", "==", "Korea"));
-        userSnapshot2 = await getDocs(q);
-      }
-      const userListPromises = userSnapshot2.docs.map(async (doc1) => {
-        const data = doc1.data();
-        const tagRef = doc(db, 'interestTag', data.uid);
-        const tagSnapshot = await getDoc(tagRef);
-
-        if (!tagSnapshot.exists) {
-          return null; // or however you want to handle this case
+        if (userData.nationality === "Korea") {
+          q = query(collection(db, "users"), where("nationality", "!=", "Korea"));
+          userSnapshot2 = await getDocs(q);
+        } else {
+          q = query(collection(db, "users"), where("nationality", "==", "Korea"));
+          userSnapshot2 = await getDocs(q);
         }
+        const userListPromises = userSnapshot2.docs.map(async (doc1) => {
+          const data = doc1.data();
+          const tagRef = doc(db, 'interestTag', data.uid);
+          const tagSnapshot = await getDoc(tagRef);
 
-        const tagData = tagSnapshot.data();
+          if (!tagSnapshot.exists) {
+            return null; // or however you want to handle this case
+          }
 
-        // Get the names of non-empty interest categories
-        const interests = Object.keys(tagData).filter(key => {
-          return Array.isArray(tagData[key]) && tagData[key].length > 0;
+          const tagData = tagSnapshot.data();
+
+          // Get the names of non-empty interest categories
+          const interests = Object.keys(tagData).filter(key => {
+            return Array.isArray(tagData[key]) && tagData[key].length > 0;
+          });
+
+          return {
+            userName: data.userName,
+            interests: interests,//.join(', '),
+            lifestyle: [],
+            uid: data.uid,
+          };
         });
 
-        return {
-          userName: data.userName,
-          interests: interests,//.join(', '),
-          lifestyle: [],
-          uid: data.uid,
-        };
-      });
+        const userList = (await Promise.all(userListPromises)).filter(user => user !== null);
 
-      const userList = (await Promise.all(userListPromises)).filter(user => user !== null);
-
-      setUsers(userList);
-      console.log(userList); // Add this line to log your users data
-    }
+        setUsers(userList);
+        console.log(userList); // Add this line to log your users data
+      }
     };
 
     fetchData();
-  },[currentUser && currentUser.uid]);
+  }, [currentUser && currentUser.uid]);
 
 
 
   const interests = [
-    "Charity",
-    "Creativity",
-    "Ent",
-    "Fitness",
+    "KoreaAttraction",
+    "Exercise",
     "Food",
     "Music",
-    "Tech"
+    "Instrument"
   ];
-  const lifestyles = [
-
-  ]
+  const lifestyles = [];
   const columns = useMemo(
     () => [
       {

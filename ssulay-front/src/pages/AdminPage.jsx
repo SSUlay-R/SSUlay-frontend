@@ -1,4 +1,6 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useContext, useEffect } from 'react';
+import { AuthContext } from '../context/AuthContext';
+import { useNavigate } from "react-router-dom";
 import './AdminPage.css';
 import Table from '../components/Table';
 import Alert from 'react-bootstrap/Alert';
@@ -8,7 +10,6 @@ import { doc, setDoc, collection, getDocs, updateDoc, getDoc } from "firebase/fi
 import { db } from '../config/firebase';
 
 export default function AdminPage() {
-
   const columns = useMemo(
     () => [
       {
@@ -67,7 +68,17 @@ export default function AdminPage() {
   
     // 사용자와 매칭 결과를 가져옵니다.
     const users = await fetchUsers();
+    if (!users) {
+      console.error('No users found.');
+      return;
+    }
+    
     const rawMatchingResults = await fetchMatchingResults();
+    if (!rawMatchingResults) {
+      console.error('No matching results found.');
+      return;
+    }
+    
   
     // 매칭 결과를 원하는 형식으로 변환합니다.
     const userBuddies = Object.entries(rawMatchingResults).reduce((acc, [uid, matchingResult]) => {

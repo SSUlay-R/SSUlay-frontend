@@ -66,12 +66,14 @@ export default function GaleShapelyAlgorithm(props) {
             });
 
             // 선호하는 버디의 uid를 인덱스로 변환
+            // 선호하는 버디의 uid를 인덱스로 변환
             foreignUsers.forEach(user => {
-                user.preferedBuddy = user.preferedBuddy.map(uid => koreanUidToIndex[uid]);
+                user.preferedBuddy = user.preferedBuddy ? user.preferedBuddy.map(uid => koreanUidToIndex[uid]) : [];
             });
             koreanUsers.forEach(user => {
-                user.preferedBuddy = user.preferedBuddy.map(uid => foreignUidToIndex[uid]);
+                user.preferedBuddy = user.preferedBuddy ? user.preferedBuddy.map(uid => foreignUidToIndex[uid]) : [];
             });
+
 
             // 매핑된 객체와 학생 데이터를 state에 저장
             setForeignIndexToUid(foreignIndexToUid);
@@ -180,13 +182,13 @@ export default function GaleShapelyAlgorithm(props) {
 
     // 매칭 결과를 firestore에 업로드하는 함수
     async function uploadToFirebase(result) {
-        for(let i = 0; i < result.length; i++) {
+        for (let i = 0; i < result.length; i++) {
             const studentUid = result[i].studentUid;
             const buddyUid = result[i].buddyUid;
-            await setDoc(doc(db, 'matchingResults', studentUid), {buddyUids: buddyUid });
+            await setDoc(doc(db, 'matchingResults', studentUid), { buddyUids: buddyUid });
         }
     }
-    
+
     // 알고리즘을 실행하는 함수
     function runAlgorithm() {
         // Get preferences from the user data
