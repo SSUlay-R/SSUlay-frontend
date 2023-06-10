@@ -120,7 +120,7 @@ export default function AdminPage() {
           <button className="process-btn" onClick={handleStartBtn} disabled={isMatchingStarted}>
             매칭 시작
             {isAutoPreferPriorityVisible && <AutoPreferPriority />}
-            <GaleShapelyAlgorithm isMatchingStarted={isMatchingStarted} />
+            {/* <GaleShapelyAlgorithm isMatchingStarted={isMatchingStarted} /> */}
           </button>
           <img className="arrow-img" alt="오른쪽 화살표" src="/assets/arrow.png" ></img>
           <button className="process-btn" onClick={handlePageOpenBtn} disabled={!isMatchingStarted} >
