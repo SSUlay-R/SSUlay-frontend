@@ -37,23 +37,46 @@ export default function BuddyForm(props) {
       await updateDoc(userRef, {
         isSubmittedForm: true,
       });
-
+      console.log("uid:",currentUser.uid);
       //** 키워드 추출 API 호출
       const response = await axios.post('/ner_inference', {
-        text: answer_1 + answer_2 + answer_3 }
+        input: answer_1 + answer_2 + answer_3 }
       );
-      const keyword_vectors = response.data.keyword_vectors;
-      console.log(`keyword_vectors ${keyword_vectors} `);
+      const keywords = response.data.keywords;
+      console.log('keyword_vectors', keywords);
 
-      // await setDoc(doc(db, 'interestTag', currentUser.uid), {
-      //   Charity: keyword_vectors.includes('CHARITY'),
-      //   Creativity: keyword_vectors.includes('ART'),
-      //   Ent: keyword_vectors.includes('ENT'),
-      // //   Fitness: false, // You can change this based on your requirements
-      // //   Food: keyword_vectors.includes('FOOD'),
-      // //   Music: keyword_vectors.includes('MUSIC'),
-      // //   Tech: keyword_vectors.includes('TECH'),
-      // // });
+      if (keywords) {
+        // exercise 카테고리 확인
+        if (keywords.exercise && Array.isArray(keywords.exercise)) {
+          const exerciseKeywords = keywords.exercise;
+          console.log('Exercise Keywords:', exerciseKeywords);
+        } else {
+          console.log('Exercise Keywords not found.');
+        }
+      
+        // musicgenre 카테고리 확인
+        if (keywords.musicgenre && Array.isArray(keywords.musicgenre)) {
+          const musicGenreKeywords = keywords.musicgenre;
+          console.log('Music Genre Keywords:', musicGenreKeywords);
+        } else {
+          console.log('Music Genre Keywords not found.');
+        }
+      
+        // instrument 카테고리 확인
+        if (keywords.instrument && Array.isArray(keywords.instrument)) {
+          const instrumentKeywords = keywords.instrument;
+          console.log('Instrument Keywords:', instrumentKeywords);
+        } else {
+          console.log('Instrument Keywords not found.');
+        }
+      
+      } else {
+        console.log('Keywords not found.');
+      }
+
+      await updateDoc(doc(db, 'interestTag', currentUser.uid), {
+        Fitness: keywords.exercise,
+      });
     } catch (error) {
       console.error(error.response);
     }

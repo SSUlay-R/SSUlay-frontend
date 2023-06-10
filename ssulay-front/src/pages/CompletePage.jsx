@@ -60,14 +60,7 @@ export default function CompletePage() {
         <Link to="/">
           <button className="submit-btn">Confirm</button>
         </Link>
-        {similarityArr.length > 0 ? (
-          <p>
-            Similarity:{' '}
-            {similarityArr.map((item) => item.similarity).join(', ')}
-          </p>
-        ) : (
-          <p>Loading</p>
-        )}
+        
       </div>
     </>
   );

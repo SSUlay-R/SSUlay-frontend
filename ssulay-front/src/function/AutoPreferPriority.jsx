@@ -1,5 +1,5 @@
 import React, {useEffect, useState}from 'react'
-import { collection, getDocs, doc, setDoc } from "firebase/firestore";
+import { collection, doc, getDocs, updateDoc, } from "firebase/firestore";
 import { db } from '../config/firebase';
 import axios from 'axios';
 
@@ -29,12 +29,6 @@ export default function AutoPreferPriority() {
             const interests = Object.values(data).flat(); //각 필드의 하위 데이터 값들만 담음
             return{
               owner:doc.id, //해당 interests항목의 주인
-              charity: data.Charity,
-              creativity: data.creativity,
-              ent: data.Ent,
-              fitness: data.Fitness,
-              food:data.Food,
-              music: data.Music,
               interests:interests,
             };
           });
@@ -60,9 +54,9 @@ export default function AutoPreferPriority() {
           console.log("sortedSimilartiy",sortedSimilarity);
           const updatedPreferedBuddy = [...user.preferedList, ...sortedSimilarity]; //완성된 우선순위배열
           console.log('updatedPreferedBuddy',updatedPreferedBuddy);
-        // await setDoc(doc(db, 'users', user.uid),{ //db에 업데이트
-        //   preferedBuddy:updatedPreferedBuddy
-        // })
+          await updateDoc(doc(db, 'users', user.uid),{ //db에 업데이트
+            preferedBuddy:updatedPreferedBuddy
+        })
         }
       });
 

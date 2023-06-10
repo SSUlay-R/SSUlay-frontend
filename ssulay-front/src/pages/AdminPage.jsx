@@ -2,13 +2,10 @@ import React, { useMemo, useState } from 'react';
 import './AdminPage.css';
 import Table from '../components/Table';
 import Alert from 'react-bootstrap/Alert';
-<<<<<<< HEAD
 import AutoPreferPriority from '../function/AutoPreferPriority';
-=======
 import GaleShapelyAlgorithm from '../function/GaleShapelyAlgorithm';
 import { doc, setDoc, collection, getDocs, updateDoc, getDoc } from "firebase/firestore";
 import { db } from '../config/firebase';
->>>>>>> fa6b64763e47c4353c150c8489759719dc3fb864
 
 export default function AdminPage() {
 
@@ -108,7 +105,7 @@ export default function AdminPage() {
         return acc;
       }, []);
   
-    setMatchingResults(formattedMatchingResults); // 추가된 코드
+  //   setMatchingResults(formattedMatchingResults); // 추가된 코드
   }
   
   
@@ -138,9 +135,9 @@ export default function AdminPage() {
         <div className="matching-result-container">
           <h1 className="admin-page-title">매칭 결과</h1>
           <hr />
-          <div className="result-table-container">
+          {/* <div className="result-table-container">
             <Table columns={columns} data={matchingResults} />
-          </div>
+          </div> */}
         </div>
       </div>
     </>
