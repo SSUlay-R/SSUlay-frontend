@@ -25,7 +25,7 @@ export default function LoginPage() {
         await signInWithEmailAndPassword(auth, email, password);
         navigate("/buddyForm");
         } catch (err) {
-          console.log(err);
+          console.log(err.response);
           setErr(true);
         }
   };
