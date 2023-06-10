@@ -18,6 +18,7 @@ export default function AutoPreferPriority() {
               uid:doc.id, //uid
               preferedList:data.preferedBuddy, 
               name:data.userName,
+              nationality: data.nationality,
             };
           });
           setUsers(userList);
@@ -46,6 +47,7 @@ export default function AutoPreferPriority() {
       // 실행할 로직들
       users.forEach(async (user)=>{
         const nonPreferedList = setNonPreferedList(user); //부분선호도에 선택되지 않은 uid 담기 
+        console.log('non:',nonPreferedList);
         const preferedInterests= setPreferedInterests(user.preferedList); //preferedList에 있는 유저들의 interest태그들만 모으도록 설정
         const similarityArr=await getSimilarity(preferedInterests, nonPreferedList); //부분선호 우선순위와 유사도 구하기 
         if( similarityArr.length !==0) {
@@ -54,14 +56,15 @@ export default function AutoPreferPriority() {
           console.log("sortedSimilartiy",sortedSimilarity);
           const updatedPreferedBuddy = [...user.preferedList, ...sortedSimilarity]; //완성된 우선순위배열
           console.log('updatedPreferedBuddy',updatedPreferedBuddy);
-        //   await updateDoc(doc(db, 'users', user.uid),{ //db에 업데이트
-        //     preferedBuddy:updatedPreferedBuddy
-        // })
+          await updateDoc(doc(db, 'users', user.uid),{ //db에 업데이트
+            preferedBuddy:updatedPreferedBuddy
+        })
         }
       });
 
       function setNonPreferedList(user){
-        const { uid, preferedList, nationality } = user;
+        const { uid, preferedList, name, nationality } = user;
+        console.log(`${name}'s ${nationality}- preferedlist ${preferedList}`);
         const nonPreferedList = [];
         users.forEach((otherUser) => {
             // For Korean users, add users of other nationalities
