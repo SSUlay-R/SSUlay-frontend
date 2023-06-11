@@ -6,8 +6,9 @@ import Table from './Table';
 import { collection, getDocs, doc, updateDoc, getDoc, query, where } from "firebase/firestore";
 import { db } from '../config/firebase';
 import { AuthContext } from "../context/AuthContext";
-
+import { useNavigate } from 'react-router-dom';
 export default function BuddySearch() {
+  const navigate = useNavigate();
   const [selectedBuddy, setSelectedBuddy] = useState([]);  //선호 버디목록에 선택된 버디들
   const [selectedTags, setSelectedTags] = useState([]); //검색 필터링용 태그
   const [rankedBuddy, setRankedBuddy] = useState([]); //랭킹 매겨진 버디들
@@ -162,8 +163,9 @@ export default function BuddySearch() {
       // Update the current user's preferred buddies in Firestore
       const userRef = doc(db, 'users', currentUser.uid); // replace "currentUser" with the current user's ID
       await updateDoc(userRef, {
-        preferredBuddies: rankedBuddyIds
+        preferedBuddy: rankedBuddyIds
       });
+      navigate('/buddyform/complete');
     }
   };
 

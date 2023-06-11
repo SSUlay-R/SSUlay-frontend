@@ -199,6 +199,7 @@ export default function GaleShapelyAlgorithm(props) {
         const uidMatchingResult = stableMatching(internationalStudentPrefernces, domesticStudentPreferences, quota);
         // Update the result state
         setResult(uidMatchingResult);
+        console.log(uidMatchingResult);
         uploadToFirebase(uidMatchingResult).catch(console.error);
         return result;
     }

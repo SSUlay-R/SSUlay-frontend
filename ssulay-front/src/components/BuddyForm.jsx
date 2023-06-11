@@ -79,6 +79,7 @@ export default function BuddyForm(props) {
         Food: keywords.food,
         Instrument: keywords.instrument,
         Music: keywords.musicgenre,
+        KoreanAttraction: keywords.koreanAttraction,
       });
     } catch (error) {
       console.error(error.response);
