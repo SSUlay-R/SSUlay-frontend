@@ -5,9 +5,8 @@ import Alert from 'react-bootstrap/Alert';
 import GaleShapelyAlgorithm from '../function/GaleShapelyAlgorithm';
 import { doc, setDoc, collection, getDocs, updateDoc, getDoc } from "firebase/firestore";
 import { db } from '../config/firebase';
-
+import AutoPreferPriority from '../function/AutoPreferPriority';
 export default function AdminPage() {
-
   const columns = useMemo(
     () => [
       {
@@ -40,7 +39,6 @@ export default function AdminPage() {
     userSnapshot.forEach((doc) => (users[doc.id] = doc.data()));
     return users;
   };
-  
   const fetchMatchingResults = async () => {
     const matchingResultsCollection = collection(db, 'matchingResults');
     const matchingResultsSnapshot = await getDocs(matchingResultsCollection);
@@ -48,28 +46,28 @@ export default function AdminPage() {
     matchingResultsSnapshot.forEach((doc) => (matchingResults[doc.id] = doc.data()));
     return matchingResults;
   };
-
   const [isMatchingStarted, setIsMatchingStarted] = useState(false);
   const [stateMessage, setStateMessage] = useState('');
   const [matchingResults, setMatchingResults] = useState([]);
-
+  const [isAutoPreferPriorityVisible, setIsAutoPreferPriorityVisible] = useState(false);
   const handleStartBtn = () => {
     setIsMatchingStarted(true);
     setStateMessage('* 매칭이 시작되었습니다.')
+    setIsMatchingStarted(true);
   }
-
+  const handlePrioBtn=()=>{
+    setIsAutoPreferPriorityVisible(true);
+    setStateMessage('* 선호도 우선순위가 완성되었습니다.')
+  }
   const handlePageOpenBtn = async () => {
     setStateMessage('* 학생들이 결과 페이지를 확인할 수 있습니다.');
-  
     // 사용자와 매칭 결과를 가져옵니다.
     const users = await fetchUsers();
     const rawMatchingResults = await fetchMatchingResults();
-  
     // 매칭 결과를 원하는 형식으로 변환합니다.
     const userBuddies = Object.entries(rawMatchingResults).reduce((acc, [uid, matchingResult]) => {
       const user = users[uid];
       const buddies = matchingResult.buddyUids.map(buddyUid => users[buddyUid]);
-  
       acc[user.userName] = {
         nationality: user.nationality,
         buddies: buddies.map(buddy => ({
@@ -79,10 +77,9 @@ export default function AdminPage() {
           studentNumber: buddy.studentNumber,
         })),
       };
-  
+      console.log(acc);
       return acc;
     }, {});
-  
     const formattedMatchingResults = Object.entries(userBuddies)
       .sort(([_, { nationality: a }], [__, { nationality: b }]) => {
         if (a === 'Korea' && b !== 'Korea') return -1;
@@ -97,28 +94,27 @@ export default function AdminPage() {
             acc.push({ userName: '', ...buddy });
           }
         });
-  
         return acc;
       }, []);
-  
     setMatchingResults(formattedMatchingResults); // 추가된 코드
   }
-  
-  
-
-
   return (
     <>
       <div className="admin-page-contianier">
         <h1 className="admin-page-title">매칭 관리</h1>
         <hr />
         <div className="process-container">
-          <button className="process-btn" onClick={handleStartBtn} disabled={isMatchingStarted}>
+        <button className="process-btn" onClick={handlePrioBtn} >
+            선호도 우선순위 <br/>생성
+            {isAutoPreferPriorityVisible && <AutoPreferPriority/>}
+          </button>
+          <img className="arrow-img" alt="오른쪽 화살표" src="/assets/arrow.png" ></img>
+          <button className="process-btn" onClick={handleStartBtn}  disabled={!isAutoPreferPriorityVisible} >
             매칭 시작
             <GaleShapelyAlgorithm isMatchingStarted={isMatchingStarted} />
           </button>
           <img className="arrow-img" alt="오른쪽 화살표" src="/assets/arrow.png" ></img>
-          <button className="process-btn" onClick={handlePageOpenBtn} disabled={!isMatchingStarted} >
+          <button className="process-btn" onClick={handlePageOpenBtn}   disabled={!isMatchingStarted}>
             매칭 확인<br />페이지 오픈
           </button>
         </div>
